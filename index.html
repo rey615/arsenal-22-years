@@ -949,149 +949,76 @@
     transform: scale(1);
   }
 
-  /* ── PANEL SWITCH ANIMATION (extreme impact) ── */
+  /* ── PANEL SWITCH ANIMATION ── */
   @keyframes panelEnter {
     0% { 
       opacity: 0; 
-      transform: translateY(250px) scale(0.5) rotateX(40deg);
-      filter: blur(40px) brightness(0.2);
+      transform: translateY(120px) scale(0.92);
+      filter: blur(20px) brightness(0.4);
     }
-    15% {
-      opacity: 0.15;
-      filter: blur(30px) brightness(0.35);
-    }
-    35% {
-      opacity: 0.4;
-      transform: translateY(100px) scale(0.75) rotateX(20deg);
-      filter: blur(18px) brightness(0.6);
-    }
-    55% {
-      opacity: 0.7;
-      transform: translateY(40px) scale(0.9) rotateX(8deg);
-      filter: blur(8px) brightness(0.85);
-    }
-    75% {
-      opacity: 0.9;
-      transform: translateY(12px) scale(0.97) rotateX(2deg);
-      filter: blur(2px) brightness(1.08);
+    40% {
+      opacity: 0.5;
+      transform: translateY(40px) scale(0.97);
+      filter: blur(8px) brightness(0.7);
     }
     100% { 
       opacity: 1; 
-      transform: translateY(0) scale(1) rotateX(0);
+      transform: translateY(0) scale(1);
       filter: blur(0) brightness(1);
     }
   }
   .panel.on {
-    animation: panelEnter 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: panelEnter 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
   
-  /* Impact flash overlay */
-  body.panel-switching::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at center, rgba(239,1,7,0.3), transparent 70%);
-    animation: impactFlash 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    pointer-events: none;
-    z-index: 99999;
-  }
-  @keyframes impactFlash {
-    0% { opacity: 1; transform: scale(0.5); }
-    50% { opacity: 0.6; }
-    100% { opacity: 0; transform: scale(2); }
-  }
+  /* Screen shake removed for better UX */
 
-  /* Screen shake on panel switch (enhanced) */
-  @keyframes screenShake {
-    0%, 100% { transform: translateX(0) rotate(0); }
-    5% { transform: translateX(-12px) rotate(-0.5deg); }
-    10% { transform: translateX(12px) rotate(0.5deg); }
-    15% { transform: translateX(-10px) rotate(-0.3deg); }
-    20% { transform: translateX(10px) rotate(0.3deg); }
-    25% { transform: translateX(-6px) rotate(-0.2deg); }
-    30% { transform: translateX(6px) rotate(0.2deg); }
-    35% { transform: translateX(-4px); }
-    40% { transform: translateX(4px); }
-    50% { transform: translateX(-2px); }
-    60% { transform: translateX(2px); }
-    70% { transform: translateX(-1px); }
-    80% { transform: translateX(1px); }
-  }
-  body.panel-switching {
-    animation: screenShake 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  /* Section label extreme entrance (enhanced) */
+  /* Section label entrance */
   @keyframes labelEnter {
     0% { 
       opacity: 0; 
-      transform: translateY(150px) scale(0.3) rotateX(30deg);
-      letter-spacing: 80px;
-      filter: blur(40px) brightness(0.3);
+      transform: translateY(60px) scale(0.8);
+      letter-spacing: 40px;
+      filter: blur(20px) brightness(0.5);
     }
-    20% {
-      opacity: 0.2;
-      letter-spacing: 50px;
-      filter: blur(25px) brightness(0.4);
-    }
-    40% {
-      opacity: 0.5;
-      transform: translateY(60px) scale(0.7) rotateX(10deg);
-      letter-spacing: 25px;
-      filter: blur(12px) brightness(0.6);
-    }
-    70% {
-      opacity: 0.85;
-      letter-spacing: 10px;
-      filter: blur(3px);
+    50% {
+      opacity: 0.6;
+      letter-spacing: 15px;
+      filter: blur(6px);
     }
     100% { 
       opacity: 1; 
-      transform: translateY(0) scale(1) rotateX(0);
+      transform: translateY(0) scale(1);
       letter-spacing: 4px;
       filter: blur(0) brightness(1);
     }
   }
   .panel.on .sec-label {
     opacity: 0;
-    animation: labelEnter 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    animation: labelEnter 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
   }
 
-  /* Section heading extreme entrance (enhanced) */
+  /* Section heading entrance */
   @keyframes headingEnter {
     0% { 
       opacity: 0; 
-      transform: translateY(200px) scale(0.3) rotateY(-15deg) rotateX(10deg);
-      filter: blur(50px) brightness(0.2);
+      transform: translateY(80px) scale(0.85);
+      filter: blur(25px) brightness(0.4);
     }
-    15% {
-      opacity: 0.1;
-      filter: blur(35px) brightness(0.3);
-    }
-    30% {
-      opacity: 0.3;
-      transform: translateY(120px) scale(0.5) rotateY(-8deg) rotateX(5deg);
-      filter: blur(25px) brightness(0.45);
-    }
-    50% {
-      opacity: 0.6;
-      transform: translateY(60px) scale(0.75) rotateY(-3deg);
-      filter: blur(12px) brightness(0.7);
-    }
-    75% {
-      opacity: 0.9;
-      transform: translateY(20px) scale(0.95);
-      filter: blur(4px) brightness(1.05);
+    40% {
+      opacity: 0.5;
+      transform: translateY(30px) scale(0.95);
+      filter: blur(8px) brightness(0.7);
     }
     100% { 
       opacity: 1; 
-      transform: translateY(0) scale(1) rotateY(0) rotateX(0);
+      transform: translateY(0) scale(1);
       filter: blur(0) brightness(1);
     }
   }
   .panel.on .sec-h {
     opacity: 0;
-    animation: headingEnter 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    animation: headingEnter 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
   }
 
   /* Background flash explosion on panel switch */
@@ -2401,10 +2328,6 @@
 
   // ── TAB SWITCH ──
   window.go = function(name){
-    // Trigger screen shake
-    document.body.classList.add('panel-switching');
-    setTimeout(function(){ document.body.classList.remove('panel-switching'); }, 600);
-    
     // Hide all panels
     document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
     // Show target panel
