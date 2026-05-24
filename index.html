@@ -904,6 +904,112 @@
   }
   footer .r { color: var(--red); font-weight: 700; }
 
+  /* ── PHOTO MODAL ── */
+  .photo-modal-overlay {
+    position: fixed; inset: 0; z-index: 10000;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .photo-modal-overlay.active {
+    opacity: 1; pointer-events: auto;
+  }
+  .photo-modal {
+    position: relative;
+    max-width: 420px; width: 90%;
+    transform: scale(0.85) translateY(30px);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .photo-modal-overlay.active .photo-modal {
+    transform: scale(1) translateY(0);
+  }
+  .photo-modal-img-wrap {
+    position: relative;
+    width: 100%; aspect-ratio: 3/4;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    overflow: hidden;
+    background: var(--bg-card);
+  }
+  .photo-modal-img-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .photo-modal:hover .photo-modal-img-wrap img {
+    transform: scale(1.03);
+  }
+  .photo-modal-img-wrap::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(to top, rgba(8,3,5,0.95), transparent);
+    pointer-events: none;
+  }
+  .photo-modal-info {
+    background: linear-gradient(135deg, var(--bg-card), rgba(22,6,14,0.95));
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--r-lg) var(--r-lg);
+    padding: 20px 24px;
+  }
+  .photo-modal-name {
+    font-size: 20px; font-weight: 800; color: var(--text-1);
+    margin-bottom: 4px;
+  }
+  .photo-modal-role {
+    font-size: 12px; color: var(--red); font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .photo-modal-period {
+    font-size: 13px; color: var(--text-2);
+  }
+  .photo-modal-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
+    color: #fff; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s; z-index: 2;
+    backdrop-filter: blur(8px);
+  }
+  .photo-modal-close:hover {
+    background: rgba(239,1,7,0.6);
+    border-color: var(--red);
+    transform: scale(1.1);
+  }
+  .photo-modal-loading {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-3); font-size: 13px;
+  }
+  .photo-modal-loading::after {
+    content: '';
+    width: 24px; height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: modalSpin 0.8s linear infinite;
+    margin-left: 10px;
+  }
+  @keyframes modalSpin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Click hint on cards */
+  .tl-card { cursor: pointer; }
+  .tl-card .click-hint {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 10px; color: var(--text-3);
+    opacity: 0; transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .tl-item:hover .click-hint { opacity: 0.6; }
+
   /* ── BACK TO TOP ── */
   .btt {
     position: fixed; bottom: 24px; right: 24px; z-index: 200;
@@ -2554,6 +2660,88 @@
   }
   window.addEventListener('scroll', updateProgress, {passive: true});
 
+  // ── PHOTO MODAL ──
+  var photoData = {
+    'Arsène Wenger': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Ars%C3%A8ne_Wenger_2024.jpg/400px-Ars%C3%A8ne_Wenger_2024.jpg', role:'Manager', period:'1996–2018' },
+    'Jens Lehmann': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Jens_Lehmann.jpg/400px-Jens_Lehmann.jpg', role:'GK', period:'2003–2008' },
+    'Dennis Bergkamp': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Dennis_Bergkamp.jpg/400px-Dennis_Bergkamp.jpg', role:'CAM', period:'1995–2006' },
+    'Thierry Henry': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Thierry_Henry.jpg/400px-Thierry_Henry.jpg', role:'CF', period:'1999–2007' },
+    'Cesc Fàbregas': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Cesc_Fabregas.jpg/400px-Cesc_Fabregas.jpg', role:'CM', period:'2003–2011' },
+    'Robin van Persie': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Robin_van_Persie.jpg/400px-Robin_van_Persie.jpg', role:'FW', period:'2004–2012' },
+    'Samir Nasri': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Samir_Nasri.jpg/400px-Samir_Nasri.jpg', role:'LW', period:'2008–2011' },
+    'Per Mertesacker': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Per_Mertesacker.jpg/400px-Per_Mertesacker.jpg', role:'CB', period:'2011–2018' },
+    'Santi Cazorla': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Santi_Cazorla.jpg/400px-Santi_Cazorla.jpg', role:'CM', period:'2012–2018' },
+    'Laurent Koscielny': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Laurent_Koscielny.jpg/400px-Laurent_Koscielny.jpg', role:'CB', period:'2010–2019' },
+    'Bacary Sagna': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Bacary_Sagna.jpg/400px-Bacary_Sagna.jpg', role:'RB', period:'2007–2014' },
+    'Kieran Gibbs': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Kieran_Gibbs.jpg/400px-Kieran_Gibbs.jpg', role:'LB', period:'2007–2017' },
+    'Alexis Sánchez': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Alexis_Sanchez.jpg/400px-Alexis_Sanchez.jpg', role:'LW', period:'2014–2018' },
+    'Héctor Bellerín': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Hector_Bellerin.jpg/400px-Hector_Bellerin.jpg', role:'RB', period:'2013–2021' },
+    'Pierre-Emerick Aubameyang': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Pierre-Emerick_Aubameyang.jpg/400px-Pierre-Emerick_Aubameyang.jpg', role:'CF', period:'2018–2022' },
+    'Granit Xhaka': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Granit_Xhaka.jpg/400px-Granit_Xhaka.jpg', role:'CM', period:'2016–2023' },
+    'Kieran Tierney': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Kieran_Tierney.jpg/400px-Kieran_Tierney.jpg', role:'LB', period:'2019–2024' },
+    'Gabriel Magalhães': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Gabriel_Magalhaes.jpg/400px-Gabriel_Magalhaes.jpg', role:'CB', period:'2020–至今' },
+    'Bukayo Saka': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Bukayo_Saka.jpg/400px-Bukayo_Saka.jpg', role:'RW', period:'2020–至今' },
+    'Martin Ødegaard': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Martin_%C3%98degaard.jpg/400px-Martin_%C3%98degaard.jpg', role:'CM', period:'2021–至今' },
+    'William Saliba': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/William_Saliba.jpg/400px-William_Saliba.jpg', role:'CB', period:'2019–至今' },
+    'Declan Rice': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Declan_Rice.jpg/400px-Declan_Rice.jpg', role:'CDM', period:'2023–至今' },
+    'David Raya': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/David_Raya.jpg/400px-David_Raya.jpg', role:'GK', period:'2023–至今' }
+  };
+
+  var modal = document.getElementById('photoModal');
+  var modalImg = document.getElementById('photoModalImg');
+  var modalName = document.getElementById('photoModalName');
+  var modalRole = document.getElementById('photoModalRole');
+  var modalPeriod = document.getElementById('photoModalPeriod');
+  var modalLoading = document.getElementById('photoModalLoading');
+
+  function openPhotoModal(name, role, period) {
+    var data = photoData[name];
+    if (!data) return;
+    modalName.textContent = name;
+    modalRole.textContent = role || data.role;
+    modalPeriod.textContent = period || data.period;
+    modalImg.style.opacity = '0';
+    modalLoading.style.display = 'flex';
+    modalImg.src = data.url;
+    modalImg.onload = function() {
+      modalImg.style.opacity = '1';
+      modalLoading.style.display = 'none';
+    };
+    modalImg.onerror = function() {
+      modalLoading.textContent = '照片加载失败';
+    };
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePhotoModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(function(){ modalImg.src = ''; }, 400);
+  }
+  document.getElementById('photoModalClose').addEventListener('click', closePhotoModal);
+  modal.addEventListener('click', function(e) {
+    if (e.target === modal) closePhotoModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closePhotoModal();
+  });
+
+  // Bind click events to all player cards
+  document.querySelectorAll('.tl-card').forEach(function(card) {
+    card.addEventListener('click', function(e) {
+      // Don't trigger if clicking on a link inside the card
+      if (e.target.tagName === 'A') return;
+      var nameEl = card.querySelector('.tl-name');
+      var posEl = card.querySelector('.tl-pos');
+      var natEl = card.querySelector('.tl-nat');
+      if (!nameEl) return;
+      var name = nameEl.textContent.trim();
+      var role = posEl ? posEl.textContent.trim() : '';
+      var period = natEl ? natEl.textContent.replace(/^[^\|]+\|\s*/, '').trim() : '';
+      openPhotoModal(name, role, period);
+    });
+  });
+
   // ── HERO NUMBER COUNT-UP ANIMATION ──
   function animateCountUp() {
     var nums = document.querySelectorAll('.h-num .n[data-target]');
@@ -2588,5 +2776,21 @@
   }, 120);
 })();
 </script>
+<!-- Photo Modal -->
+<div class="photo-modal-overlay" id="photoModal">
+  <div class="photo-modal">
+    <button class="photo-modal-close" id="photoModalClose">✕</button>
+    <div class="photo-modal-img-wrap">
+      <div class="photo-modal-loading" id="photoModalLoading">加载中</div>
+      <img id="photoModalImg" src="" alt="" style="opacity:0;transition:opacity 0.4s;">
+    </div>
+    <div class="photo-modal-info">
+      <div class="photo-modal-name" id="photoModalName"></div>
+      <div class="photo-modal-role" id="photoModalRole"></div>
+      <div class="photo-modal-period" id="photoModalPeriod"></div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
