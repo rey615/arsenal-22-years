@@ -1117,11 +1117,6 @@
     color: #fff;
     transform: scale(1.1);
   }
-  /* Legacy loading (hidden) */
-  .photo-modal-loading { display: none !important; }
-  .photo-modal-img-wrap { display: none !important; }
-  .photo-modal-info { display: none !important; }
-
   /* Click hint on cards */
   .tl-card { cursor: pointer; }
   .tl-card .click-hint {
@@ -1806,24 +1801,27 @@
     .tab:hover:not(.on)::after { width: 0; }
     .tl-item:hover .tl-year { color: #6a5555; transform: none; text-shadow: none; }
     .tl-item:hover .tl-year::after { width: 0; }
-    .tl-item:hover .tl-dot { border-color: var(--border-red); box-shadow: none; }
+    .tl-item:hover .tl-dot { border-color: var(--border-red); background: transparent; box-shadow: none; }
     .tl-item:hover .tl-dot::before { opacity: 0; }
-    .tl-item:hover .tl-card { border-color: var(--border); transform: none; box-shadow: none; background: linear-gradient(135deg, var(--bg-card), rgba(22,6,14,0.9)); }
+    .tl-item:hover .tl-card { border-color: var(--border); transform: none; box-shadow: none; }
     .tl-item:hover .tl-card::before { opacity: 0; width: 4px; }
     .tl-item:hover .tl-card::after { left: -100%; }
     .prologue-wrap .tl-card:hover { border-color: rgba(156,130,74,0.55); transform: none; box-shadow: none; }
     .prologue-wrap .tl-card:hover::before { opacity: 0; }
-    .player-dot:hover .shirt { transform: none; }
-    .btt:hover { background: var(--red); box-shadow: none; }
-    .next-btn:hover { transform: none; box-shadow: none; }
+    .player-dot:hover .shirt { transform: none; animation-play-state: running; }
+    .btt:hover { background: rgba(239,1,7,0.15); box-shadow: none; color: var(--red); border-color: var(--red); }
+    .next-btn:hover { transform: none; box-shadow: none; border-color: var(--border); color: var(--text-2); }
+    .next-btn:hover::before { opacity: 0; }
+    .next-btn:hover::after { left: -100%; }
     .next-btn:hover .next-btn-arrow { transform: none; }
     .h-num:hover .n { transform: none; }
-    .formation-player:hover { transform: none; box-shadow: none; }
+    .formation-player:hover { transform: none; box-shadow: none; z-index: auto; }
     /* Show click hint on touch devices */
     .tl-card .click-hint { opacity: 0.4; }
-    /* Disable 3D transforms on touch */
+    /* Disable 3D transforms on touch — simplify entrance */
     .tl-card { transform-style: flat; }
-    .tl-item.reveal { filter: blur(4px) brightness(0.85); transform: translateX(-40px) scale(0.95); }
+    .tl-item.reveal { opacity: 0; filter: none; transform: translateX(-30px) scale(0.97); }
+    .tl-item.reveal.visible { opacity: 1; transform: none; filter: none; }
     /* Touch optimization */
     .tl-card, .tab, .next-btn, .btt, .photo-modal-close { touch-action: manipulation; }
   }
@@ -2666,7 +2664,6 @@
 <!-- Player Info Card Modal -->
 <div class="photo-modal-overlay" id="photoModal">
   <div class="photo-modal" id="photoModalContent">
-    <button class="photo-modal-close" id="photoModalClose">✕</button>
   </div>
 </div>
 
