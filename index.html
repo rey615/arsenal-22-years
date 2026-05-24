@@ -2591,31 +2591,71 @@
   window.addEventListener('scroll', updateProgress, {passive: true});
 
   // ── PHOTO MODAL ──
-  var photoData = {
-    '阿尔塞纳·温格': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Ars%C3%A8ne_Wenger_2024.jpg/400px-Ars%C3%A8ne_Wenger_2024.jpg', role:'Manager', period:'1996–2018' },
-    '延斯·莱曼': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Jens_Lehmann.jpg/400px-Jens_Lehmann.jpg', role:'GK', period:'2003–2008' },
-    '丹尼斯·博格坎普': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Dennis_Bergkamp.jpg/400px-Dennis_Bergkamp.jpg', role:'CAM', period:'1995–2006' },
-    '蒂埃里·亨利': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Thierry_Henry.jpg/400px-Thierry_Henry.jpg', role:'CF', period:'1999–2007' },
-    '塞斯克·法布雷加斯': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Cesc_Fabregas.jpg/400px-Cesc_Fabregas.jpg', role:'CM', period:'2003–2011' },
-    '罗宾·范佩西': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Robin_van_Persie.jpg/400px-Robin_van_Persie.jpg', role:'FW', period:'2004–2012' },
-    '萨米尔·纳斯里': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Samir_Nasri.jpg/400px-Samir_Nasri.jpg', role:'LW', period:'2008–2011' },
-    '佩尔·默特萨克': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Per_Mertesacker.jpg/400px-Per_Mertesacker.jpg', role:'CB', period:'2011–2018' },
-    '桑蒂·卡索拉': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Santi_Cazorla.jpg/400px-Santi_Cazorla.jpg', role:'CM', period:'2012–2018' },
-    '洛朗·科斯切尔尼': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Laurent_Koscielny.jpg/400px-Laurent_Koscielny.jpg', role:'CB', period:'2010–2019' },
-    '巴卡里·萨尼亚': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Bacary_Sagna.jpg/400px-Bacary_Sagna.jpg', role:'RB', period:'2007–2014' },
-    '基兰·吉布斯': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Kieran_Gibbs.jpg/400px-Kieran_Gibbs.jpg', role:'LB', period:'2007–2017' },
-    '亚历克西斯·桑切斯': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Alexis_Sanchez.jpg/400px-Alexis_Sanchez.jpg', role:'LW', period:'2014–2018' },
-    '埃克托尔·贝莱林': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Hector_Bellerin.jpg/400px-Hector_Bellerin.jpg', role:'RB', period:'2013–2021' },
-    '皮埃尔-埃梅里克·奥巴梅扬': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Pierre-Emerick_Aubameyang.jpg/400px-Pierre-Emerick_Aubameyang.jpg', role:'CF', period:'2018–2022' },
-    '格拉尼特·扎卡': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Granit_Xhaka.jpg/400px-Granit_Xhaka.jpg', role:'CM', period:'2016–2023' },
-    '基耶兰·蒂尔尼': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Kieran_Tierney.jpg/400px-Kieran_Tierney.jpg', role:'LB', period:'2019–2024' },
-    '加布里埃尔·马加良斯': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Gabriel_Magalhaes.jpg/400px-Gabriel_Magalhaes.jpg', role:'CB', period:'2020–至今' },
-    '布卡约·萨卡': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Bukayo_Saka.jpg/400px-Bukayo_Saka.jpg', role:'RW', period:'2020–至今' },
-    '马丁·厄德高': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Martin_%C3%98degaard.jpg/400px-Martin_%C3%98degaard.jpg', role:'CM', period:'2021–至今' },
-    '威廉·萨利巴': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/William_Saliba.jpg/400px-William_Saliba.jpg', role:'CB', period:'2019–至今' },
-    '德克兰·赖斯': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Declan_Rice.jpg/400px-Declan_Rice.jpg', role:'CDM', period:'2023–至今' },
-    '大卫·拉亚': { url:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/David_Raya.jpg/400px-David_Raya.jpg', role:'GK', period:'2023–至今' }
+  // Map Chinese names to English Wikipedia titles for API lookup
+  var photoWikiTitles = {
+    '阿尔塞纳·温格': 'Arsène_Wenger',
+    '延斯·莱曼': 'Jens_Lehmann_(footballer)',
+    '丹尼斯·博格坎普': 'Dennis_Bergkamp',
+    '蒂埃里·亨利': 'Thierry_Henry',
+    '塞斯克·法布雷加斯': 'Cesc_Fàbregas',
+    '罗宾·范佩西': 'Robin_van_Persie',
+    '萨米尔·纳斯里': 'Samir_Nasri',
+    '佩尔·默特萨克': 'Per_Mertesacker',
+    '桑蒂·卡索拉': 'Santi_Cazorla',
+    '洛朗·科斯切尔尼': 'Laurent_Koscielny',
+    '巴卡里·萨尼亚': 'Bacary_Sagna',
+    '基兰·吉布斯': 'Kieran_Gibbs',
+    '亚历克西斯·桑切斯': 'Alexis_Sánchez',
+    '埃克托尔·贝莱林': 'Héctor_Bellerín',
+    '皮埃尔-埃梅里克·奥巴梅扬': 'Pierre-Emerick_Aubameyang',
+    '格拉尼特·扎卡': 'Granit_Xhaka',
+    '基耶兰·蒂尔尼': 'Kieran_Tierney',
+    '加布里埃尔·马加良斯': 'Gabriel_Magalhães',
+    '布卡约·萨卡': 'Bukayo_Saka',
+    '马丁·厄德高': 'Martin_Ødegaard',
+    '威廉·萨利巴': 'William_Saliba',
+    '德克兰·赖斯': 'Declan_Rice',
+    '大卫·拉亚': 'David_Raya'
   };
+
+  // Cache for fetched photo URLs
+  var photoUrlCache = {};
+
+  // Fetch photo URL from Wikipedia API (supports CORS)
+  function fetchPhotoUrl(wikiTitle, callback) {
+    if (photoUrlCache[wikiTitle]) {
+      callback(photoUrlCache[wikiTitle]);
+      return;
+    }
+    var apiUrl = 'https://en.wikipedia.org/w/api.php?action=query&titles='
+      + encodeURIComponent(wikiTitle)
+      + '&prop=pageimages&format=json&pithumbsize=300&origin=*';
+    try {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', apiUrl, true);
+      xhr.timeout = 8000;
+      xhr.onload = function() {
+        try {
+          var data = JSON.parse(xhr.responseText);
+          var pages = data.query && data.query.pages;
+          if (pages) {
+            for (var pid in pages) {
+              var thumb = pages[pid].thumbnail && pages[pid].thumbnail.source;
+              if (thumb) {
+                photoUrlCache[wikiTitle] = thumb;
+                callback(thumb);
+                return;
+              }
+            }
+          }
+          callback(null);
+        } catch(e) { callback(null); }
+      };
+      xhr.onerror = function() { callback(null); };
+      xhr.ontimeout = function() { callback(null); };
+      xhr.send();
+    } catch(e) { callback(null); }
+  }
 
   var modal = document.getElementById('photoModal');
   var modalImg = document.getElementById('photoModalImg');
@@ -2625,23 +2665,35 @@
   var modalLoading = document.getElementById('photoModalLoading');
 
   function openPhotoModal(name, role, period) {
-    var data = photoData[name];
-    if (!data) return;
+    var wikiTitle = photoWikiTitles[name];
+    if (!wikiTitle) return;
     modalName.textContent = name;
-    modalRole.textContent = role || data.role;
-    modalPeriod.textContent = period || data.period;
+    modalRole.textContent = role;
+    modalPeriod.textContent = period;
     modalImg.style.opacity = '0';
+    modalImg.src = '';
     modalLoading.style.display = 'flex';
-    modalImg.src = data.url;
-    modalImg.onload = function() {
-      modalImg.style.opacity = '1';
-      modalLoading.style.display = 'none';
-    };
-    modalImg.onerror = function() {
-      modalLoading.textContent = '照片加载失败';
-    };
+    modalLoading.textContent = '加载中';
+    modalLoading.className = 'photo-modal-loading';
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    fetchPhotoUrl(wikiTitle, function(url) {
+      if (url) {
+        modalImg.src = url;
+        modalImg.onload = function() {
+          modalImg.style.opacity = '1';
+          modalLoading.style.display = 'none';
+        };
+        modalImg.onerror = function() {
+          modalLoading.textContent = '照片加载失败';
+          modalLoading.className = 'photo-modal-loading error';
+        };
+      } else {
+        modalLoading.textContent = '暂无照片';
+        modalLoading.className = 'photo-modal-loading error';
+      }
+    });
   }
   function closePhotoModal() {
     modal.classList.remove('active');
