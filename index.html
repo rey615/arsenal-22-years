@@ -1719,6 +1719,14 @@
     .tl-dot { width: 10px; height: 10px; border-width: 2px; }
     .era-divider { padding-left: 0; margin: 24px 0 8px; }
 
+    .tl-item:hover .tl-card {
+      border-color: var(--border-red);
+      transform: none;
+      box-shadow: none;
+    }
+    .tl-item:hover .tl-card::before { opacity: 0; }
+    .tl-item:hover .tl-card::after { left: -100%; }
+
     section { padding: 28px 14px; }
     .tl-card { padding: 16px 14px; margin: 8px 0; border-radius: 12px; }
     .tl-card-head { gap: 8px; }
@@ -1771,6 +1779,7 @@
     .hero-eyebrow { font-size: 10px; padding: 4px 12px; }
     .nav-links a { font-size: 10px; gap: 6px; }
     .tl-item { grid-template-columns: 40px 1px 1fr; gap: 0 8px; }
+    .tl-item:hover .tl-card { transform: none; box-shadow: none; }
     .tl-year { font-size: 12px; }
     .tl-name { font-size: 15px; }
     .tl-story { font-size: 12.5px; }
