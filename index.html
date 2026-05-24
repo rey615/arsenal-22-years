@@ -201,8 +201,8 @@
   }
   .tab.on { color: var(--red); border-bottom-color: var(--red); }
   .tab:hover:not(.on) { color: var(--text-1); }
-  .panel { display: block; opacity: 1; min-height: 100vh; min-height: 100dvh; padding-bottom: 40px; }
-  .panel + .panel { border-top: 1px solid var(--border); }
+  .panel { display: none; opacity: 0; min-height: 100vh; min-height: 100dvh; padding-bottom: 40px; }
+  .panel.on { display: block; opacity: 1; }
 
   /* ── SECTION DIVIDER ── */
   .section-divider {
@@ -597,7 +597,7 @@
   }
 
   @media (max-width: 640px) {
-    .panel { min-height: auto; padding-bottom: 24px; }
+    .panel.on { min-height: auto; padding-bottom: 24px; }
     .hero { min-height: 500px; padding: 60px 16px 40px; }
     .hero h1 { font-size: 40px; letter-spacing: -1.5px; }
     .hero-sub { font-size: 15px; }
@@ -763,7 +763,7 @@
 <!-- ══════════════════════════════════════════════
      PROLOGUE: 不败之巅 · 2004
 ═══════════════════════════════════════════════ -->
-<div id="p-prologue" class="panel">
+<div id="p-prologue" class="panel on">
 <section>
   <div class="sec-label">开篇</div>
   <div class="sec-h">不败之巅 · 2004</div>
@@ -1476,18 +1476,27 @@
 (function(){
   var tabNames = ['prologue','era1','era2','formation'];
 
-  // ── NAVIGATION: scroll to section ──
+  // ── TAB SWITCH ──
   window.go = function(name){
+    // Hide all panels
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+    // Show target panel
     var p = document.getElementById('p-'+name);
-    if(p){
-      var offset = p.getBoundingClientRect().top + window.scrollY - 106;
-      window.scrollTo({top: offset, behavior:'smooth'});
-    }
+    if(p) p.classList.add('on');
+    // Scroll to top of content area
+    window.scrollTo({top: 0, behavior:'smooth'});
     // Update tab highlight
     document.querySelectorAll('.tab').forEach(function(t,i){
       t.classList.remove('on');
       if(tabNames[i]===name) t.classList.add('on');
     });
+    // Update nav highlight
+    document.querySelectorAll('.nav-links a').forEach(function(link){
+      link.classList.remove('active');
+      if(link.getAttribute('data-section') === name) link.classList.add('active');
+    });
+    // Re-trigger reveal animations for new panel
+    setTimeout(function(){ initReveal(p); }, 50);
   };
 
   // ── Reveal on scroll ──
@@ -1530,29 +1539,6 @@
   }
   window.addEventListener('scroll', updateProgress, {passive: true});
 
-  // ── NAV ACTIVE SECTION HIGHLIGHT (scroll-based) ──
-  var navLinks = document.querySelectorAll('.nav-links a');
-  var tabBtns = document.querySelectorAll('.tab');
-  function updateActiveNav() {
-    var scrollPos = window.scrollY + 140;
-    var currentSection = tabNames[0];
-    tabNames.forEach(function(name){
-      var el = document.getElementById('p-'+name);
-      if(el && el.offsetTop <= scrollPos) {
-        currentSection = name;
-      }
-    });
-    navLinks.forEach(function(link){
-      link.classList.remove('active');
-      if(link.getAttribute('data-section') === currentSection) link.classList.add('active');
-    });
-    tabBtns.forEach(function(t,i){
-      t.classList.remove('on');
-      if(tabNames[i]===currentSection) t.classList.add('on');
-    });
-  }
-  window.addEventListener('scroll', updateActiveNav, {passive:true});
-
   // ── HERO NUMBER COUNT-UP ANIMATION ──
   function animateCountUp() {
     var nums = document.querySelectorAll('.h-num .n[data-target]');
@@ -1583,7 +1569,6 @@
   setTimeout(function(){
     initReveal(document);
     applyStaggeredDelays(document);
-    updateActiveNav();
     animateCountUp();
   }, 120);
 })();
