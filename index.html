@@ -288,6 +288,42 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    position: relative;
+    display: inline-block;
+  }
+  .prologue-year::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright), var(--gold));
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateX(-50%);
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(200,168,96,0.5);
+  }
+  .prologue-year.visible::after {
+    width: 100%;
+  }
+  .reveal.visible .prologue-year {
+    animation: yearReveal 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  @keyframes yearReveal {
+    0% { 
+      opacity: 0; 
+      transform: translateY(30px) scale(0.8) rotateX(15deg);
+      filter: blur(10px);
+    }
+    60% {
+      transform: translateY(-5px) scale(1.05);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateY(0) scale(1) rotateX(0);
+      filter: blur(0);
+    }
   }
   .prologue-line {
     width: 80px; height: 1px; margin: 14px auto 24px;
@@ -311,9 +347,44 @@
     text-align: right; padding-top: 22px;
     font-size: 22px; font-weight: 900; color: #6a5555;
     letter-spacing: -0.5px; line-height: 1;
-    transition: color .3s, text-shadow .3s;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
   }
-  .tl-item:hover .tl-year { color: var(--red); text-shadow: 0 0 10px var(--red-glow); }
+  .tl-year::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -4px;
+    width: 0;
+    height: 2px;
+    background: var(--red);
+    transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 8px rgba(239,1,7,0.5);
+  }
+  .tl-item.reveal.visible .tl-year {
+    animation: yearSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+  .tl-item.reveal.visible .tl-year::after {
+    width: 100%;
+    transition-delay: 0.4s;
+  }
+  @keyframes yearSlideIn {
+    0% { 
+      opacity: 0; 
+      transform: translateX(20px);
+      filter: blur(4px);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateX(0);
+      filter: blur(0);
+    }
+  }
+  .tl-item:hover .tl-year { 
+    color: var(--red); 
+    text-shadow: 0 0 15px var(--red-glow);
+    transform: scale(1.05);
+  }
   .tl-line {
     position: relative; display: flex; flex-direction: column; align-items: center;
   }
@@ -322,10 +393,74 @@
     background: var(--bg-surface); border: 2.5px solid var(--text-3);
     margin-top: 26px; flex-shrink: 0; z-index: 1;
     transition: all .3s;
+    position: relative;
   }
-  .tl-item:hover .tl-dot { border-color: var(--red); background: var(--red); box-shadow: 0 0 14px var(--red-glow); }
+  .tl-dot::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .tl-item.reveal.visible .tl-dot {
+    animation: dotPulse 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  }
+  .tl-item.reveal.visible .tl-dot::before {
+    animation: dotRipple 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+  }
+  @keyframes dotPulse {
+    0% { 
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  @keyframes dotRipple {
+    0% {
+      border-color: var(--red);
+      transform: scale(0.8);
+      opacity: 1;
+    }
+    100% {
+      border-color: transparent;
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+  .tl-item:hover .tl-dot { 
+    border-color: var(--red); 
+    background: var(--red); 
+    box-shadow: 0 0 14px var(--red-glow), 0 0 30px rgba(239,1,7,0.3);
+    transform: scale(1.2);
+  }
+  .tl-item:hover .tl-dot::before {
+    border-color: rgba(239,1,7,0.3);
+    transform: scale(1.5);
+  }
   .tl-vline {
     width: 1px; flex: 1; background: var(--border); margin-top: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tl-vline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: linear-gradient(180deg, var(--red), var(--gold));
+    transition: height 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .tl-item.reveal.visible .tl-vline::after {
+    height: 100%;
   }
   .tl-item:last-child .tl-vline { display: none; }
   .tl-card {
@@ -392,6 +527,60 @@
     background: rgba(156,130,74,0.08);
     border-radius: 0 var(--r-sm) var(--r-sm) 0;
     text-shadow: 0 0 8px rgba(200,168,96,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .tl-story .quote::before {
+    content: '"';
+    position: absolute;
+    top: -5px;
+    left: 8px;
+    font-size: 48px;
+    color: rgba(200,168,96,0.15);
+    font-style: normal;
+    line-height: 1;
+  }
+  
+  /* Card content staggered entrance */
+  .tl-item.reveal.visible .tl-card-head {
+    animation: contentSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+  .tl-item.reveal.visible .tl-nat {
+    animation: contentSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  }
+  .tl-item.reveal.visible .tl-story {
+    animation: contentSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  }
+  .tl-item.reveal.visible .quote {
+    animation: quoteReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  }
+  @keyframes contentSlideIn {
+    0% { 
+      opacity: 0; 
+      transform: translateX(-20px);
+      filter: blur(4px);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateX(0);
+      filter: blur(0);
+    }
+  }
+  @keyframes quoteReveal {
+    0% { 
+      opacity: 0; 
+      transform: translateX(-30px) scale(0.95);
+      filter: blur(6px);
+      border-left-color: transparent;
+    }
+    50% {
+      border-left-color: var(--gold-bright);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateX(0) scale(1);
+      filter: blur(0);
+    }
   }
 
   /* Special border accents */
@@ -764,22 +953,27 @@
   @keyframes panelEnter {
     0% { 
       opacity: 0; 
-      transform: translateY(200px) scale(0.6) rotateX(35deg);
-      filter: blur(30px) brightness(0.3);
+      transform: translateY(250px) scale(0.5) rotateX(40deg);
+      filter: blur(40px) brightness(0.2);
     }
-    20% {
-      opacity: 0.2;
-      filter: blur(20px) brightness(0.5);
+    15% {
+      opacity: 0.15;
+      filter: blur(30px) brightness(0.35);
     }
-    40% {
-      opacity: 0.5;
-      transform: translateY(80px) scale(0.8) rotateX(18deg);
-      filter: blur(12px) brightness(0.7);
+    35% {
+      opacity: 0.4;
+      transform: translateY(100px) scale(0.75) rotateX(20deg);
+      filter: blur(18px) brightness(0.6);
     }
-    70% {
-      opacity: 0.85;
-      transform: translateY(25px) scale(0.95) rotateX(5deg);
-      filter: blur(4px) brightness(1.1);
+    55% {
+      opacity: 0.7;
+      transform: translateY(40px) scale(0.9) rotateX(8deg);
+      filter: blur(8px) brightness(0.85);
+    }
+    75% {
+      opacity: 0.9;
+      transform: translateY(12px) scale(0.97) rotateX(2deg);
+      filter: blur(2px) brightness(1.08);
     }
     100% { 
       opacity: 1; 
@@ -788,7 +982,23 @@
     }
   }
   .panel.on {
-    animation: panelEnter 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: panelEnter 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  
+  /* Impact flash overlay */
+  body.panel-switching::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(239,1,7,0.3), transparent 70%);
+    animation: impactFlash 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    pointer-events: none;
+    z-index: 99999;
+  }
+  @keyframes impactFlash {
+    0% { opacity: 1; transform: scale(0.5); }
+    50% { opacity: 0.6; }
+    100% { opacity: 0; transform: scale(2); }
   }
 
   /* Screen shake on panel switch (enhanced) */
@@ -815,18 +1025,25 @@
   @keyframes labelEnter {
     0% { 
       opacity: 0; 
-      transform: translateY(120px) scale(0.5) rotateX(20deg);
-      letter-spacing: 60px;
-      filter: blur(30px) brightness(0.5);
+      transform: translateY(150px) scale(0.3) rotateX(30deg);
+      letter-spacing: 80px;
+      filter: blur(40px) brightness(0.3);
     }
-    30% {
-      opacity: 0.3;
-      letter-spacing: 35px;
-      filter: blur(15px);
+    20% {
+      opacity: 0.2;
+      letter-spacing: 50px;
+      filter: blur(25px) brightness(0.4);
     }
-    60% {
-      opacity: 0.7;
-      letter-spacing: 15px;
+    40% {
+      opacity: 0.5;
+      transform: translateY(60px) scale(0.7) rotateX(10deg);
+      letter-spacing: 25px;
+      filter: blur(12px) brightness(0.6);
+    }
+    70% {
+      opacity: 0.85;
+      letter-spacing: 10px;
+      filter: blur(3px);
     }
     100% { 
       opacity: 1; 
@@ -837,40 +1054,44 @@
   }
   .panel.on .sec-label {
     opacity: 0;
-    animation: labelEnter 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+    animation: labelEnter 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
   }
 
   /* Section heading extreme entrance (enhanced) */
   @keyframes headingEnter {
     0% { 
       opacity: 0; 
-      transform: translateY(150px) scale(0.5) rotateY(-10deg);
-      filter: blur(40px) brightness(0.4);
+      transform: translateY(200px) scale(0.3) rotateY(-15deg) rotateX(10deg);
+      filter: blur(50px) brightness(0.2);
     }
-    25% {
-      opacity: 0.15;
-      transform: translateY(100px) scale(0.65) rotateY(-5deg);
-      filter: blur(25px) brightness(0.6);
+    15% {
+      opacity: 0.1;
+      filter: blur(35px) brightness(0.3);
+    }
+    30% {
+      opacity: 0.3;
+      transform: translateY(120px) scale(0.5) rotateY(-8deg) rotateX(5deg);
+      filter: blur(25px) brightness(0.45);
     }
     50% {
-      opacity: 0.5;
-      transform: translateY(50px) scale(0.8) rotateY(-2deg);
-      filter: blur(10px) brightness(0.85);
+      opacity: 0.6;
+      transform: translateY(60px) scale(0.75) rotateY(-3deg);
+      filter: blur(12px) brightness(0.7);
     }
     75% {
-      opacity: 0.85;
-      transform: translateY(15px) scale(0.95);
-      filter: blur(3px) brightness(1.05);
+      opacity: 0.9;
+      transform: translateY(20px) scale(0.95);
+      filter: blur(4px) brightness(1.05);
     }
     100% { 
       opacity: 1; 
-      transform: translateY(0) scale(1) rotateY(0);
+      transform: translateY(0) scale(1) rotateY(0) rotateX(0);
       filter: blur(0) brightness(1);
     }
   }
   .panel.on .sec-h {
     opacity: 0;
-    animation: headingEnter 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+    animation: headingEnter 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
   }
 
   /* Background flash explosion on panel switch */
