@@ -2711,7 +2711,7 @@
       if(link.getAttribute('data-section') === name) link.classList.add('active');
     });
     // Re-trigger reveal animations for new panel
-    setTimeout(function(){ initReveal(p); }, 50);
+    setTimeout(function(){ initReveal(p); applyStaggeredDelays(p); }, 50);
   };
 
   // ── Reveal on scroll ──
@@ -3069,8 +3069,12 @@
 
   // ── INITIALIZE ──
   setTimeout(function(){
-    initReveal(document);
-    applyStaggeredDelays(document);
+    // Only init reveal for the currently visible panel (prologue)
+    var prologuePanel = document.getElementById('p-prologue');
+    if (prologuePanel) {
+      initReveal(prologuePanel);
+      applyStaggeredDelays(prologuePanel);
+    }
     animateCountUp();
   }, 120);
 })();
