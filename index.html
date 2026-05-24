@@ -2153,5 +2153,21 @@
   }, 120);
 })();
 </script>
+<script>
+// DIAGNOSTIC: show element heights
+setTimeout(function(){
+  var d = document.createElement('div');
+  d.style.cssText = 'position:fixed;bottom:60px;right:10px;background:rgba(255,0,0,0.9);color:#fff;padding:10px;font:12px monospace;z-index:99999;max-height:80vh;overflow:auto;';
+  var panels = document.querySelectorAll('.panel');
+  var html = '<b>scrollHeight:</b> ' + document.documentElement.scrollHeight + '<br>';
+  panels.forEach(function(p){
+    html += p.id + ': display=' + getComputedStyle(p).display + ', offsetH=' + p.offsetHeight + ', scrollH=' + p.scrollHeight + '<br>';
+  });
+  var hero = document.querySelector('.hero');
+  if(hero) html += 'hero: display=' + getComputedStyle(hero).display + ', offsetH=' + hero.offsetHeight + '<br>';
+  d.innerHTML = html;
+  document.body.appendChild(d);
+}, 2000);
+</script>
 </body>
 </html>
