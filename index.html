@@ -474,6 +474,66 @@
     font-weight: 600;
   }
 
+  /* ── FINAL IMAGE SECTION ── */
+  .final-image-section {
+    padding: 60px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .final-image-inner {
+    text-align: center;
+  }
+  .final-image-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold-bright);
+    margin-bottom: 32px;
+    letter-spacing: 2px;
+  }
+  .final-image-wrap {
+    margin: 0 auto 40px;
+    max-width: 600px;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(239,1,7,0.15);
+    border: 1px solid var(--border);
+  }
+  .final-image-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .final-image-caption {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .final-image-caption p {
+    font-size: 15px;
+    color: var(--text-2);
+    line-height: 2;
+    margin: 0;
+  }
+  .final-image-highlight {
+    font-size: 16px !important;
+    color: var(--text-1) !important;
+    font-weight: 500;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, rgba(239,1,7,0.08), rgba(156,130,74,0.08));
+    border-left: 3px solid var(--red);
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    margin: 8px 0;
+  }
+  .final-image-epilogue {
+    font-size: 13px !important;
+    color: var(--gold-bright) !important;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 24px !important;
+    font-weight: 600;
+  }
+
   /* ── FOOTER ── */
   footer {
     text-align: center; padding: 32px 20px;
@@ -588,6 +648,13 @@
 
     .section-divider { padding: 6px 14px; }
     .section-divider .sd-icon { font-size: 14px; }
+
+    .final-image-section { padding: 40px 16px; }
+    .final-image-title { font-size: 18px; margin-bottom: 24px; }
+    .final-image-wrap { margin-bottom: 28px; }
+    .final-image-caption p { font-size: 14px; line-height: 1.9; }
+    .final-image-highlight { font-size: 14px !important; padding: 16px 18px; }
+    .final-image-epilogue { font-size: 11px !important; letter-spacing: 1.5px; }
 
     .btt { width: 38px; height: 38px; bottom: 16px; right: 16px; font-size: 18px; }
 
@@ -1369,6 +1436,37 @@
 
 </section>
 </div>
+
+<!-- FINAL IMAGE SECTION -->
+<section class="final-image-section reveal">
+  <div class="final-image-inner">
+    <h2 class="final-image-title">《他们始终背对着我们》</h2>
+    <div class="final-image-wrap">
+      <img src="henry-bergkamp.jpg" alt="亨利与博格坎普手持签名照片，背对英超奖杯" loading="lazy">
+    </div>
+    <div class="final-image-caption">
+      <p>2004年那个夏天，他们捧着奖杯，面朝全世界。</p>
+      <p>然后转身走了——博格坎普退役，亨利离开，温格辞职。</p>
+      <p>留下我们，站在原地。</p>
+      <br>
+      <p>22年，我们始终盯着他们的背影。</p>
+      <br>
+      <p>没人告诉我们要等多久。</p>
+      <p>只是年复一年，在那面大炮徽章下，</p>
+      <p>越来越多的人学会了用"等待"来定义自己是枪手。</p>
+      <br>
+      <p>今天，当他俩重新出现在这幅画里，</p>
+      <p>手持亲笔签名，背对着这座奖杯——</p>
+      <br>
+      <p class="final-image-highlight">我忽然明白：<br>
+      不是我们在等他们回来，<br>
+      是他们一直在等我们，<br>
+      等我们把这件事亲手完成。</p>
+      <br>
+      <p class="final-image-epilogue">PREMIER LEAGUE CHAMPIONS 2026. 22 YEARS WAIT IS OVER.</p>
+    </div>
+  </div>
+</section>
 
 <!-- FOOTER -->
 <footer>
