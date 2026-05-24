@@ -2155,19 +2155,28 @@
 </script>
 <script>
 // DIAGNOSTIC: show element heights
-setTimeout(function(){
-  var d = document.createElement('div');
-  d.style.cssText = 'position:fixed;bottom:60px;right:10px;background:rgba(255,0,0,0.9);color:#fff;padding:10px;font:12px monospace;z-index:99999;max-height:80vh;overflow:auto;';
+function showDiag(){
+  var existing = document.getElementById('diag-panel');
+  if(!existing){
+    var d = document.createElement('div');
+    d.id = 'diag-panel';
+    d.style.cssText = 'position:fixed;bottom:60px;right:10px;background:rgba(255,0,0,0.9);color:#fff;padding:10px;font:12px monospace;z-index:99999;max-height:80vh;overflow:auto;border-radius:8px;';
+    document.body.appendChild(d);
+    existing = d;
+  }
   var panels = document.querySelectorAll('.panel');
   var html = '<b>scrollHeight:</b> ' + document.documentElement.scrollHeight + '<br>';
   panels.forEach(function(p){
-    html += p.id + ': display=' + getComputedStyle(p).display + ', offsetH=' + p.offsetHeight + ', scrollH=' + p.scrollHeight + '<br>';
+    var cs = getComputedStyle(p);
+    html += p.id + ': display=' + cs.display + ', offsetH=' + p.offsetHeight + ', clientH=' + p.clientHeight + '<br>';
   });
   var hero = document.querySelector('.hero');
   if(hero) html += 'hero: display=' + getComputedStyle(hero).display + ', offsetH=' + hero.offsetHeight + '<br>';
-  d.innerHTML = html;
-  document.body.appendChild(d);
-}, 2000);
+  html += 'body scrollH=' + document.body.scrollHeight + ', clientH=' + document.body.clientHeight + '<br>';
+  existing.innerHTML = html;
+}
+setTimeout(showDiag, 1000);
+setInterval(showDiag, 3000);
 </script>
 </body>
 </html>
