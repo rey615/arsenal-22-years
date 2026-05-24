@@ -923,7 +923,8 @@
     max-width: 440px; width: 92%;
     transform: scale(0.88) translateY(24px);
     transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-    max-height: 88vh;
+    max-height: 88dvh;
+    max-height: 88vh; /* fallback */
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(239,1,7,0.3) transparent;
@@ -1102,12 +1103,13 @@
   /* Close button */
   .photo-modal-close {
     position: absolute; top: 14px; right: 14px;
-    width: 32px; height: 32px; border-radius: 50%;
+    width: 40px; height: 40px; border-radius: 50%;
     background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
-    color: rgba(255,255,255,0.6); font-size: 16px; cursor: pointer;
+    color: rgba(255,255,255,0.6); font-size: 18px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.3s; z-index: 2;
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   .photo-modal-close:hover {
     background: rgba(239,1,7,0.5);
@@ -1714,8 +1716,8 @@
     .tabs { padding: 0 8px; -webkit-overflow-scrolling: touch; }
     .tab { padding: 12px 12px; font-size: 12px; }
 
-    .tl-item { grid-template-columns: 48px 1px 1fr; gap: 0 10px; }
-    .tl-year { font-size: 14px; }
+    .tl-item { grid-template-columns: 52px 1px 1fr; gap: 0 10px; }
+    .tl-year { font-size: 14px; white-space: nowrap; }
     .tl-dot { width: 10px; height: 10px; border-width: 2px; }
     .era-divider { padding-left: 0; margin: 24px 0 8px; }
 
@@ -1746,8 +1748,8 @@
     .fc-title { font-size: 18px; }
 
     .player-dot .shirt { width: 30px; height: 30px; font-size: 11px; border-width: 1.5px; }
-    .player-dot .pname { font-size: 7px; max-width: 36px; line-height: 1.1; }
-    .player-dot .pyear { font-size: 6px; }
+    .player-dot .pname { font-size: 8px; max-width: 36px; line-height: 1.1; }
+    .player-dot .pyear { font-size: 7px; }
     .lineup { padding: 10px 2px; }
 
     .closing { padding: 28px 16px; margin-top: 28px; }
@@ -1778,19 +1780,52 @@
     .hero h1 { font-size: 34px; }
     .hero-eyebrow { font-size: 10px; padding: 4px 12px; }
     .nav-links a { font-size: 10px; gap: 6px; }
-    .tl-item { grid-template-columns: 40px 1px 1fr; gap: 0 8px; }
+    .tl-item { grid-template-columns: 44px 1px 1fr; gap: 0 8px; }
     .tl-item:hover .tl-card { transform: none; box-shadow: none; }
-    .tl-year { font-size: 12px; }
+    .tl-year { font-size: 12px; white-space: nowrap; }
     .tl-name { font-size: 15px; }
     .tl-story { font-size: 12.5px; }
     .tl-card { padding: 14px 12px; }
     .player-dot .shirt { width: 26px; height: 26px; font-size: 10px; }
-    .player-dot .pname { font-size: 6px; max-width: 30px; }
+    .player-dot .pname { font-size: 7px; max-width: 30px; }
   }
 
   /* ── SAFE AREA (notch phones) ── */
   @supports (padding: env(safe-area-inset-top)) {
     nav { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+    .btt { bottom: calc(24px + env(safe-area-inset-bottom)); right: calc(24px + env(safe-area-inset-right)); }
+    .photo-modal-close { top: calc(14px + env(safe-area-inset-top)); right: calc(14px + env(safe-area-inset-right)); }
+  }
+
+  /* ── TOUCH DEVICE FIXES ── */
+  @media (hover: none) and (pointer: coarse) {
+    /* Disable all sticky hover effects on touch */
+    .nav-links a:hover { color: var(--text-2); transform: none; text-shadow: none; }
+    .nav-links a:hover::before { width: 0; }
+    .tab:hover:not(.on) { color: var(--text-2); transform: none; }
+    .tab:hover:not(.on)::after { width: 0; }
+    .tl-item:hover .tl-year { color: #6a5555; transform: none; text-shadow: none; }
+    .tl-item:hover .tl-year::after { width: 0; }
+    .tl-item:hover .tl-dot { border-color: var(--border-red); box-shadow: none; }
+    .tl-item:hover .tl-dot::before { opacity: 0; }
+    .tl-item:hover .tl-card { border-color: var(--border); transform: none; box-shadow: none; background: linear-gradient(135deg, var(--bg-card), rgba(22,6,14,0.9)); }
+    .tl-item:hover .tl-card::before { opacity: 0; width: 4px; }
+    .tl-item:hover .tl-card::after { left: -100%; }
+    .prologue-wrap .tl-card:hover { border-color: rgba(156,130,74,0.55); transform: none; box-shadow: none; }
+    .prologue-wrap .tl-card:hover::before { opacity: 0; }
+    .player-dot:hover .shirt { transform: none; }
+    .btt:hover { background: var(--red); box-shadow: none; }
+    .next-btn:hover { transform: none; box-shadow: none; }
+    .next-btn:hover .next-btn-arrow { transform: none; }
+    .h-num:hover .n { transform: none; }
+    .formation-player:hover { transform: none; box-shadow: none; }
+    /* Show click hint on touch devices */
+    .tl-card .click-hint { opacity: 0.4; }
+    /* Disable 3D transforms on touch */
+    .tl-card { transform-style: flat; }
+    .tl-item.reveal { filter: blur(4px) brightness(0.85); transform: translateX(-40px) scale(0.95); }
+    /* Touch optimization */
+    .tl-card, .tab, .next-btn, .btt, .photo-modal-close { touch-action: manipulation; }
   }
 
   /* ── REDUCED MOTION ── */
@@ -2637,7 +2672,7 @@
 
 <script>
 (function(){
-  var tabNames = ['era1','era2','formation'];
+  var tabNames = ['prologue','era1','era2','formation'];
 
   // ── TAB SWITCH ──
   window.go = function(name){
@@ -2905,8 +2940,15 @@
   function openPhotoModal(name) {
     var data = playerData[name];
     if (!data) return;
-    modal.classList.add('active');
+    // Lock scroll (iOS Safari fix)
+    window._scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + window._scrollY + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.overflow = 'hidden';
+
+    modal.classList.add('active');
 
     // Build card HTML
     var html = '<button class="photo-modal-close" id="photoModalClose">✕</button>';
@@ -2953,7 +2995,13 @@
 
   function closePhotoModal() {
     modal.classList.remove('active');
+    // Restore scroll (iOS Safari fix)
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
     document.body.style.overflow = '';
+    window.scrollTo(0, window._scrollY || 0);
   }
   modal.addEventListener('click', function(e) {
     if (e.target === modal) closePhotoModal();
@@ -2971,7 +3019,7 @@
     card.appendChild(hint);
     
     card.addEventListener('click', function(e) {
-      if (e.target.tagName === 'A') return;
+      if (e.target.closest('A')) return;
       var nameEl = card.querySelector('.tl-name');
       if (!nameEl) return;
       var name = nameEl.textContent.trim();
