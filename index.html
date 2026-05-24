@@ -196,8 +196,16 @@
   }
   .tab.on { color: var(--red); border-bottom-color: var(--red); }
   .tab:hover:not(.on) { color: var(--text-1); }
-  .panel { display:none; opacity: 0; transition: opacity 0.35s ease; }
-  .panel.on { display:block; opacity: 1; }
+  .panel { display: block; opacity: 1; }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    display: flex; align-items: center; gap: 20px;
+    max-width: 1100px; margin: 0 auto;
+    padding: 8px 24px;
+  }
+  .section-divider .sd-line { flex:1; height:1px; background: linear-gradient(90deg, transparent, var(--border-red), var(--border-gold), var(--border-red), transparent); }
+  .section-divider .sd-icon { font-size: 18px; opacity: 0.4; }
 
   /* ── SECTION ── */
   section { padding: 48px 24px; max-width: 1100px; margin: 0 auto; }
@@ -626,7 +634,7 @@
 <!-- ══════════════════════════════════════════════
      PROLOGUE: 不败之巅 · 2004
 ═══════════════════════════════════════════════ -->
-<div id="p-prologue" class="panel on">
+<div id="p-prologue" class="panel">
 <section>
   <div class="sec-label">开篇</div>
   <div class="sec-h">不败之巅 · 2004</div>
@@ -659,6 +667,8 @@
   </div>
 </section>
 </div>
+
+<div class="section-divider"><div class="sd-line"></div><div class="sd-icon">⚔️</div><div class="sd-line"></div></div>
 
 <!-- ══════════════════════════════════════════════
      PANEL 1: 诸神黄昏 2005–2015
@@ -865,6 +875,8 @@
 </section>
 </div>
 
+<div class="section-divider"><div class="sd-line"></div><div class="sd-icon">🔴</div><div class="sd-line"></div></div>
+
 <!-- ══════════════════════════════════════════════
      PANEL 2: 王者归来 2016–2026
 ═══════════════════════════════════════════════ -->
@@ -1069,6 +1081,8 @@
   </div>
 </section>
 </div>
+
+<div class="section-divider"><div class="sd-line"></div><div class="sd-icon">⚽</div><div class="sd-line"></div></div>
 
 <!-- ══════════════════════════════════════════════
      PANEL 3: 两套阵容
@@ -1306,29 +1320,26 @@
 
 <script>
 (function(){
-  // Tabs
   var tabNames = ['prologue','era1','era2','formation'];
+
+  // ── NAVIGATION: scroll to section ──
   window.go = function(name){
-    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+    var p = document.getElementById('p-'+name);
+    if(p){
+      var offset = p.getBoundingClientRect().top + window.scrollY - 106;
+      window.scrollTo({top: offset, behavior:'smooth'});
+    }
+    // Update tab highlight
     document.querySelectorAll('.tab').forEach(function(t,i){
       t.classList.remove('on');
       if(tabNames[i]===name) t.classList.add('on');
     });
-    var p = document.getElementById('p-'+name);
-    if(p){
-      p.classList.add('on');
-      setTimeout(function(){
-        var tabsEl = document.getElementById('tabs');
-        if(tabsEl) window.scrollTo({top: tabsEl.offsetTop - 52, behavior:'smooth'});
-        initReveal(p);
-      }, 50);
-    }
   };
 
-  // Reveal
+  // ── Reveal on scroll ──
   function initReveal(container){
     var items = (container||document).querySelectorAll('.reveal');
-    items.forEach(function(el, idx){
+    items.forEach(function(el){
       if(!el._observed){
         el._observed = true;
         observer.observe(el);
@@ -1341,16 +1352,14 @@
   }
   var observer = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
-      if(e.isIntersecting) {
-        e.target.classList.add('visible');
-      }
+      if(e.isIntersecting) e.target.classList.add('visible');
     });
   },{threshold:0.08, rootMargin:'0px 0px -30px 0px'});
 
   // Hero fade-in
   document.querySelector('.hero').classList.add('fade-in');
 
-  // Back to top
+  // ── Back to top ──
   var btt = document.getElementById('btt');
   window.addEventListener('scroll', function(){
     if(window.scrollY>400) btt.classList.add('visible');
@@ -1367,70 +1376,62 @@
   }
   window.addEventListener('scroll', updateProgress, {passive: true});
 
-  // ── NAV ACTIVE SECTION HIGHLIGHT ──
+  // ── NAV ACTIVE SECTION HIGHLIGHT (scroll-based) ──
   var navLinks = document.querySelectorAll('.nav-links a');
+  var tabBtns = document.querySelectorAll('.tab');
   function updateActiveNav() {
-    var panels = document.querySelectorAll('.panel.on');
-    if (panels.length === 0) return;
-    var activePanel = panels[0];
-    var panelId = activePanel.id.replace('p-', '');
-    navLinks.forEach(function(link) {
-      link.classList.remove('active');
-      if (link.getAttribute('data-section') === panelId) {
-        link.classList.add('active');
+    var scrollPos = window.scrollY + 140;
+    var currentSection = tabNames[0];
+    tabNames.forEach(function(name){
+      var el = document.getElementById('p-'+name);
+      if(el && el.offsetTop <= scrollPos) {
+        currentSection = name;
       }
     });
+    navLinks.forEach(function(link){
+      link.classList.remove('active');
+      if(link.getAttribute('data-section') === currentSection) link.classList.add('active');
+    });
+    tabBtns.forEach(function(t,i){
+      t.classList.remove('on');
+      if(tabNames[i]===currentSection) t.classList.add('on');
+    });
   }
+  window.addEventListener('scroll', updateActiveNav, {passive:true});
 
   // ── HERO NUMBER COUNT-UP ANIMATION ──
   function animateCountUp() {
     var nums = document.querySelectorAll('.h-num .n[data-target]');
-    nums.forEach(function(el) {
+    nums.forEach(function(el){
       var target = parseInt(el.getAttribute('data-target'), 10);
       var duration = 1500;
       var startTime = null;
-      function step(timestamp) {
-        if (!startTime) startTime = timestamp;
+      function step(timestamp){
+        if(!startTime) startTime = timestamp;
         var progress = Math.min((timestamp - startTime) / duration, 1);
         var eased = 1 - Math.pow(1 - progress, 3);
         el.textContent = Math.round(eased * target);
-        if (progress < 1) {
-          requestAnimationFrame(step);
-        }
+        if(progress < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
     });
   }
 
   // ── STAGGERED REVEAL DELAYS ──
-  function applyStaggeredDelays(container) {
-    var reveals = (container || document).querySelectorAll('.tl-item.reveal');
-    reveals.forEach(function(el, idx) {
+  function applyStaggeredDelays(container){
+    var reveals = (container||document).querySelectorAll('.tl-item.reveal');
+    reveals.forEach(function(el, idx){
       el.style.transitionDelay = (idx * 0.06) + 's';
     });
   }
 
   // ── INITIALIZE ──
   setTimeout(function(){
-    var activePanel = document.querySelector('.panel.on');
-    if (activePanel) {
-      initReveal(activePanel);
-      applyStaggeredDelays(activePanel);
-    }
+    initReveal(document);
+    applyStaggeredDelays(document);
     updateActiveNav();
     animateCountUp();
   }, 120);
-
-  // Update nav highlight when tabs change
-  var origGo = window.go;
-  window.go = function(name) {
-    origGo(name);
-    setTimeout(function(){
-      updateActiveNav();
-      var p = document.getElementById('p-' + name);
-      if (p) applyStaggeredDelays(p);
-    }, 60);
-  };
 })();
 </script>
 </body>
