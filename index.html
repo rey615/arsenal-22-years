@@ -923,8 +923,8 @@
     max-width: 440px; width: 92%;
     transform: scale(0.88) translateY(24px);
     transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-    max-height: 88dvh;
     max-height: 88vh; /* fallback */
+    max-height: 88dvh;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: rgba(239,1,7,0.3) transparent;
@@ -1768,6 +1768,17 @@
     .btt { width: 38px; height: 38px; bottom: 16px; right: 16px; font-size: 18px; }
 
     footer { padding: 20px 16px; margin-top: 12px; }
+
+    /* Modal mobile adjustments */
+    .photo-modal { width: 95%; max-height: 85vh; max-height: 85dvh; }
+    .pinfo-header { padding: 24px 20px 18px; }
+    .pinfo-name { font-size: 22px; }
+    .pinfo-pos-icon { width: 48px; height: 48px; font-size: 17px; }
+    .pinfo-stat-val { font-size: 20px; }
+    .pinfo-honors { padding: 14px 20px; }
+    .pinfo-quote { padding: 14px 20px; }
+    .pinfo-footer { padding: 12px 20px; }
+    .photo-modal-close { width: 44px; height: 44px; top: 10px; right: 10px; font-size: 20px; }
   }
 
   /* ── EXTRA SMALL SCREENS (< 380px) ── */
@@ -2937,12 +2948,15 @@
   function openPhotoModal(name) {
     var data = playerData[name];
     if (!data) return;
+    // Prevent double-open
+    if (modal.classList.contains('active')) return;
     // Lock scroll (iOS Safari fix)
     window._scrollY = window.scrollY;
     document.body.style.position = 'fixed';
     document.body.style.top = '-' + window._scrollY + 'px';
     document.body.style.left = '0';
     document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
 
     modal.classList.add('active');
@@ -2991,17 +3005,19 @@
   }
 
   function closePhotoModal() {
+    if (!modal.classList.contains('active')) return;
     modal.classList.remove('active');
     // Restore scroll (iOS Safari fix)
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.left = '';
     document.body.style.right = '';
+    document.body.style.width = '';
     document.body.style.overflow = '';
     window.scrollTo(0, window._scrollY || 0);
   }
   modal.addEventListener('click', function(e) {
-    if (e.target === modal) closePhotoModal();
+    if (!modalContent.contains(e.target)) closePhotoModal();
   });
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closePhotoModal();
@@ -3016,7 +3032,8 @@
     card.appendChild(hint);
     
     card.addEventListener('click', function(e) {
-      if (e.target.closest('A')) return;
+      var t = e.target;
+      while (t && t !== card) { if (t.tagName === 'A') return; t = t.parentNode; }
       var nameEl = card.querySelector('.tl-name');
       if (!nameEl) return;
       var name = nameEl.textContent.trim();
