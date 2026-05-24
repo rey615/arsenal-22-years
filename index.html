@@ -774,6 +774,8 @@
       transform: scale(1);
     }
   }
+  /* Background flash explosion on panel switch - DISABLED to fix whitespace */
+  /*
   .panel.on::after {
     content: '';
     position: fixed;
@@ -786,6 +788,7 @@
     z-index: 9999;
     animation: bgFlash 1.8s ease-out forwards;
   }
+  */
 
   /* Content reveal with impact */
   .panel.on .sec-s {
@@ -1017,7 +1020,8 @@
     transform: scale(1.1);
   }
 
-  /* Background ambient glow for panels - enhanced */
+  /* Background ambient glow for panels - DISABLED to fix whitespace */
+  /*
   .panel.on::before {
     content: '';
     position: fixed;
@@ -1038,6 +1042,7 @@
     0% { transform: translate(0, 0) rotate(0deg); }
     100% { transform: translate(40px, -30px) rotate(2deg); }
   }
+  */
 
   /* Section label animation */
   @keyframes labelGlow {
