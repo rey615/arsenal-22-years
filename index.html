@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="22年，22人，2套阵容。从2004年不败夺冠到2026年王者归来，这是枪手的史诗。">
 <meta property="og:title" content="Arsenal · 22年的等待">
 <meta property="og:description" content="2004年不败夺冠后，阿森纳等了22年。22年，恰好是两套首发阵容。从亨利到萨卡，从温格到阿尔特塔——22人，2套阵容，1个答案。">
@@ -38,14 +38,14 @@
     --ease: cubic-bezier(0.4,0,0.2,1);
   }
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior:smooth; }
+  html { scroll-behavior:smooth; -webkit-text-size-adjust: 100%; }
   body {
     font-family:'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;
     background: var(--bg-deep);
     color: var(--text-1);
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
-    min-width: 360px;
+    overflow-x: hidden;
   }
 
   /* ── CUSTOM SELECTION ── */
@@ -86,8 +86,9 @@
     border-bottom: 1px solid rgba(239,1,7,0.18);
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 28px; height: 54px;
+    flex-shrink: 0;
   }
-  .logo { font-size: 16px; font-weight: 800; color: var(--text-1); display:flex; align-items:center; gap:10px; }
+  .logo { font-size: 16px; font-weight: 800; color: var(--text-1); display:flex; align-items:center; gap:10px; flex-shrink: 0; }
   .logo-cannon {
     width: 26px; height: 26px;
     background: var(--red);
@@ -113,7 +114,8 @@
   /* ── HERO ── */
   .hero {
     position: relative; overflow: hidden;
-    min-height: 600px;
+    min-height: 100vh;
+    min-height: 100dvh;
     display: flex; align-items: center; justify-content: center;
     text-align: center; padding: 80px 24px 60px;
     background: radial-gradient(ellipse at 50% 0%, rgba(239,1,7,0.22) 0%, transparent 55%),
@@ -187,7 +189,10 @@
     border-bottom: 1px solid var(--border);
     display: flex; overflow-x: auto; padding: 0 20px;
     gap: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .tabs::-webkit-scrollbar { display: none; }
   .tab {
     padding: 15px 22px; font-size: 13.5px; font-weight: 600;
     color: var(--text-2); background: none; border: none; cursor: pointer;
@@ -208,7 +213,7 @@
   .section-divider .sd-icon { font-size: 18px; opacity: 0.4; }
 
   /* ── SECTION ── */
-  section { padding: 48px 24px; max-width: 1100px; margin: 0 auto; }
+  section { padding: 48px 24px; max-width: 1100px; margin: 0 auto; width: 100%; }
   .sec-label {
     font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
     text-transform: uppercase; color: var(--red); margin-bottom: 8px;
@@ -286,6 +291,7 @@
     margin: 12px 0 12px;
     transition: all .3s var(--ease);
     position: relative; overflow: hidden;
+    word-wrap: break-word; overflow-wrap: break-word;
   }
   .tl-card::before {
     content:''; position:absolute; top:0; left:0; width:3px; height:100%;
@@ -308,7 +314,7 @@
   .pos-mf { background: rgba(239,1,7,0.12); color: #f06060; border: 1px solid var(--border-red); }
   .pos-fw { background: rgba(20,180,80,0.12); color: #60d090; border: 1px solid rgba(20,180,80,0.3); }
   .tl-nat { font-size: 12px; color: var(--text-2); margin-bottom: 10px; }
-  .tl-story { font-size: 14px; color: #b8a0a0; line-height: 1.85; }
+  .tl-story { font-size: 14px; color: #b8a0a0; line-height: 1.85; word-wrap: break-word; overflow-wrap: break-word; }
   .tl-story strong {
     color: var(--text-1); font-weight: 700;
     text-shadow: 0 0 6px rgba(240,230,230,0.15);
@@ -381,6 +387,7 @@
     display: flex; flex-direction: column;
     justify-content: space-around;
     padding: 16px 8px;
+    overflow: hidden;
   }
   .lineup-row {
     display: flex; justify-content: space-around; align-items: center;
@@ -529,28 +536,81 @@
   }
 
   @media (max-width: 640px) {
+    .hero { min-height: 500px; padding: 60px 16px 40px; }
     .hero h1 { font-size: 40px; letter-spacing: -1.5px; }
-    .hero-nums { gap: 20px; }
-    .h-num .n { font-size: 36px; }
-    .tl-item { grid-template-columns: 54px 1px 1fr; gap: 0 14px; }
-    .tl-year { font-size: 16px; }
-    .era-divider { padding-left: 0; }
-    section { padding: 32px 16px; }
-    .tl-card { padding: 18px 16px; margin: 8px 0; }
-    .closing { padding: 32px 20px; }
-    .closing h3 { font-size: 22px; }
-    .closing p { font-size: 14px; }
-    nav { padding: 0 14px; }
-    .nav-links { gap: 12px; }
-    .nav-links a { font-size: 12px; }
-    .tab { padding: 13px 14px; font-size: 12px; }
-    .sec-h { font-size: 24px; }
-    .prologue-year { font-size: 46px; }
-    .player-dot .shirt { width: 34px; height: 34px; font-size: 12px; }
-    .player-dot .pname { font-size: 8px; max-width: 42px; }
-    .player-dot .pyear { font-size: 7px; }
-    .lineup { padding: 12px 4px; }
-    .tl-story .quote { padding: 10px 14px; font-size: 13px; }
+    .hero-sub { font-size: 15px; }
+    .hero-nums { gap: 16px; flex-wrap: wrap; }
+    .h-num .n { font-size: 32px; }
+    .h-num .l { font-size: 10px; }
+    .hero-divider { display: none; }
+
+    nav { padding: 0 12px; height: 48px; }
+    .logo { font-size: 14px; gap: 6px; }
+    .logo-cannon { width: 22px; height: 22px; font-size: 12px; }
+    .nav-links { gap: 8px; }
+    .nav-links a { font-size: 11px; }
+
+    .tabs { padding: 0 8px; -webkit-overflow-scrolling: touch; }
+    .tab { padding: 12px 12px; font-size: 12px; }
+
+    .tl-item { grid-template-columns: 48px 1px 1fr; gap: 0 10px; }
+    .tl-year { font-size: 14px; }
+    .tl-dot { width: 10px; height: 10px; border-width: 2px; }
+    .era-divider { padding-left: 0; margin: 24px 0 8px; }
+
+    section { padding: 28px 14px; }
+    .tl-card { padding: 16px 14px; margin: 8px 0; border-radius: 12px; }
+    .tl-card-head { gap: 8px; }
+    .tl-name { font-size: 16px; }
+    .tl-pos { font-size: 9px; padding: 2px 8px; }
+    .tl-nat { font-size: 11px; margin-bottom: 8px; }
+    .tl-story { font-size: 13px; line-height: 1.8; }
+    .tl-story .quote { padding: 10px 12px; font-size: 12.5px; }
+
+    .sec-h { font-size: 22px; }
+    .sec-s { font-size: 13px; }
+
+    .prologue-year { font-size: 40px; }
+    .prologue-wrap .tl-card { padding: 20px 16px; }
+
+    .formation-card .fc-header { padding: 14px 16px; }
+    .fc-title { font-size: 18px; }
+
+    .player-dot .shirt { width: 30px; height: 30px; font-size: 11px; border-width: 1.5px; }
+    .player-dot .pname { font-size: 7px; max-width: 36px; line-height: 1.1; }
+    .player-dot .pyear { font-size: 6px; }
+    .lineup { padding: 10px 2px; }
+
+    .closing { padding: 28px 16px; margin-top: 28px; }
+    .closing h3 { font-size: 20px; }
+    .closing p { font-size: 14px; line-height: 1.9; }
+    .closing-year { font-size: 56px; }
+
+    .section-divider { padding: 6px 14px; }
+    .section-divider .sd-icon { font-size: 14px; }
+
+    .btt { width: 38px; height: 38px; bottom: 16px; right: 16px; font-size: 18px; }
+
+    footer { padding: 24px 16px; margin-top: 28px; }
+  }
+
+  /* ── EXTRA SMALL SCREENS (< 380px) ── */
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 34px; }
+    .hero-eyebrow { font-size: 10px; padding: 4px 12px; }
+    .nav-links a { font-size: 10px; gap: 6px; }
+    .tl-item { grid-template-columns: 40px 1px 1fr; gap: 0 8px; }
+    .tl-year { font-size: 12px; }
+    .tl-name { font-size: 15px; }
+    .tl-story { font-size: 12.5px; }
+    .tl-card { padding: 14px 12px; }
+    .player-dot .shirt { width: 26px; height: 26px; font-size: 10px; }
+    .player-dot .pname { font-size: 6px; max-width: 30px; }
+  }
+
+  /* ── SAFE AREA (notch phones) ── */
+  @supports (padding: env(safe-area-inset-top)) {
+    nav { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
   }
 
   /* ── REDUCED MOTION ── */
