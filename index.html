@@ -2050,6 +2050,15 @@
     // Show target panel
     var p = document.getElementById('p-'+name);
     if(p) p.classList.add('on');
+    // Show/hide hero: only visible on prologue
+    var hero = document.querySelector('.hero');
+    if(hero) {
+      if(name === 'prologue') {
+        hero.style.display = '';
+      } else {
+        hero.style.display = 'none';
+      }
+    }
     // Scroll to top of content area
     window.scrollTo({top: 0, behavior:'auto'});
     // Update tab highlight
