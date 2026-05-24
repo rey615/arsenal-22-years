@@ -905,11 +905,12 @@
   footer .r { color: var(--red); font-weight: 700; }
 
   /* ── PHOTO MODAL ── */
+  /* ── PLAYER INFO CARD MODAL ── */
   .photo-modal-overlay {
     position: fixed; inset: 0; z-index: 10000;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(0,0,0,0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     display: flex; align-items: center; justify-content: center;
     opacity: 0; pointer-events: none;
     transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -919,74 +920,205 @@
   }
   .photo-modal {
     position: relative;
-    max-width: 420px; width: 90%;
-    transform: scale(0.85) translateY(30px);
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 440px; width: 92%;
+    transform: scale(0.88) translateY(24px);
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    max-height: 88vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(239,1,7,0.3) transparent;
   }
+  .photo-modal::-webkit-scrollbar { width: 4px; }
+  .photo-modal::-webkit-scrollbar-thumb { background: rgba(239,1,7,0.3); border-radius: 2px; }
   .photo-modal-overlay.active .photo-modal {
     transform: scale(1) translateY(0);
   }
-  .photo-modal-img-wrap {
+  /* Card header with position icon */
+  .pinfo-header {
     position: relative;
-    width: 100%; aspect-ratio: 3/4;
+    padding: 32px 28px 24px;
+    background: linear-gradient(160deg, rgba(22,6,14,0.98), rgba(12,4,8,0.99));
+    border: 1px solid var(--border);
     border-radius: var(--r-lg) var(--r-lg) 0 0;
     overflow: hidden;
-    background: var(--bg-card);
   }
-  .photo-modal-img-wrap img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .photo-modal:hover .photo-modal-img-wrap img {
-    transform: scale(1.03);
-  }
-  .photo-modal-img-wrap::after {
+  .pinfo-header::before {
     content: '';
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 40%;
-    background: linear-gradient(to top, rgba(8,3,5,0.95), transparent);
+    position: absolute; top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--red-dim), transparent 70%);
     pointer-events: none;
   }
-  .photo-modal-info {
-    background: linear-gradient(135deg, var(--bg-card), rgba(22,6,14,0.95));
+  .pinfo-header::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-red), var(--border-gold), var(--border-red), transparent);
+  }
+  .pinfo-pos-icon {
+    width: 56px; height: 56px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 900;
+    color: #fff;
+    margin-bottom: 16px;
+    position: relative;
+    letter-spacing: 1px;
+  }
+  .pinfo-pos-icon::after {
+    content: '';
+    position: absolute; inset: -3px;
+    border-radius: 19px;
+    border: 1px solid;
+    border-color: inherit;
+    opacity: 0.25;
+  }
+  .pinfo-name {
+    font-size: 26px; font-weight: 900; color: var(--text-1);
+    line-height: 1.2; margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .pinfo-nickname {
+    font-size: 13px; color: var(--gold-bright);
+    font-weight: 600; letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .pinfo-meta {
+    display: flex; align-items: center; gap: 16px;
+    font-size: 12px; color: var(--text-2);
+  }
+  .pinfo-meta-item {
+    display: flex; align-items: center; gap: 5px;
+  }
+  .pinfo-meta-dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: var(--text-3);
+  }
+  /* Stats section */
+  .pinfo-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .pinfo-stat {
+    background: linear-gradient(160deg, rgba(18,4,10,0.95), rgba(12,4,8,0.98));
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .pinfo-stat-val {
+    font-size: 24px; font-weight: 900;
+    background: linear-gradient(135deg, var(--text-1), var(--gold-bright));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+  .pinfo-stat-label {
+    font-size: 10px; color: var(--text-3);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin-top: 4px; font-weight: 600;
+  }
+  /* Honors section */
+  .pinfo-honors {
+    padding: 18px 28px;
+    background: linear-gradient(160deg, rgba(18,4,10,0.95), rgba(12,4,8,0.98));
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .pinfo-honors-title {
+    font-size: 10px; color: var(--text-3);
+    text-transform: uppercase; letter-spacing: 2px;
+    font-weight: 700; margin-bottom: 10px;
+  }
+  .pinfo-honors-list {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .pinfo-honor-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 600;
+    border: 1px solid;
+  }
+  .pinfo-honor-badge.gold {
+    color: var(--gold-bright);
+    border-color: var(--border-gold);
+    background: rgba(156,130,74,0.08);
+  }
+  .pinfo-honor-badge.red {
+    color: var(--red);
+    border-color: var(--border-red);
+    background: var(--red-dim);
+  }
+  .pinfo-honor-badge.white {
+    color: var(--text-2);
+    border-color: var(--border);
+    background: rgba(255,255,255,0.03);
+  }
+  /* Quote section */
+  .pinfo-quote {
+    padding: 18px 28px;
+    background: linear-gradient(160deg, rgba(18,4,10,0.95), rgba(12,4,8,0.98));
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+  .pinfo-quote::before {
+    content: '"';
+    position: absolute; top: 8px; left: 16px;
+    font-size: 48px; font-weight: 900;
+    color: var(--red); opacity: 0.15;
+    line-height: 1;
+    font-family: Georgia, serif;
+  }
+  .pinfo-quote-text {
+    font-size: 13.5px; color: var(--text-2);
+    line-height: 1.8; font-style: italic;
+    padding-left: 8px;
+  }
+  /* Footer */
+  .pinfo-footer {
+    padding: 14px 28px;
+    background: linear-gradient(160deg, rgba(18,4,10,0.95), rgba(12,4,8,0.98));
     border: 1px solid var(--border);
     border-top: none;
     border-radius: 0 0 var(--r-lg) var(--r-lg);
-    padding: 20px 24px;
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .photo-modal-name {
-    font-size: 20px; font-weight: 800; color: var(--text-1);
-    margin-bottom: 4px;
+  .pinfo-era-tag {
+    font-size: 11px; color: var(--text-3);
+    font-weight: 600; letter-spacing: 1px;
   }
-  .photo-modal-role {
-    font-size: 12px; color: var(--red); font-weight: 600;
-    letter-spacing: 1px; text-transform: uppercase;
-    margin-bottom: 8px;
+  .pinfo-era-tag span {
+    color: var(--red); font-weight: 700;
   }
-  .photo-modal-period {
-    font-size: 13px; color: var(--text-2);
+  .pinfo-number {
+    font-size: 11px; color: var(--text-3);
+    font-weight: 500;
   }
+  /* Close button */
   .photo-modal-close {
-    position: absolute; top: 12px; right: 12px;
-    width: 36px; height: 36px; border-radius: 50%;
-    background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
-    color: #fff; font-size: 18px; cursor: pointer;
+    position: absolute; top: 14px; right: 14px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6); font-size: 16px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: all 0.3s; z-index: 2;
     backdrop-filter: blur(8px);
   }
   .photo-modal-close:hover {
-    background: rgba(239,1,7,0.6);
+    background: rgba(239,1,7,0.5);
     border-color: var(--red);
+    color: #fff;
     transform: scale(1.1);
   }
-  .photo-modal-loading {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text-3); font-size: 13px;
-  }
+  /* Legacy loading (hidden) */
+  .photo-modal-loading { display: none !important; }
+  .photo-modal-img-wrap { display: none !important; }
+  .photo-modal-info { display: none !important; }
 
   /* Click hint on cards */
   .tl-card { cursor: pointer; }
@@ -2487,19 +2619,10 @@
 
 <div class="btt" id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
 
-<!-- Photo Modal -->
+<!-- Player Info Card Modal -->
 <div class="photo-modal-overlay" id="photoModal">
-  <div class="photo-modal">
+  <div class="photo-modal" id="photoModalContent">
     <button class="photo-modal-close" id="photoModalClose">✕</button>
-    <div class="photo-modal-img-wrap">
-      <div class="photo-modal-loading" id="photoModalLoading">加载中</div>
-      <img id="photoModalImg" src="" alt="" style="opacity:0;transition:opacity 0.4s;">
-    </div>
-    <div class="photo-modal-info">
-      <div class="photo-modal-name" id="photoModalName"></div>
-      <div class="photo-modal-role" id="photoModalRole"></div>
-      <div class="photo-modal-period" id="photoModalPeriod"></div>
-    </div>
   </div>
 </div>
 
@@ -2579,79 +2702,250 @@
   }
   window.addEventListener('scroll', updateProgress, {passive: true});
 
-  /* ── PHOTO MODAL ── */
-  // Player data with position colors
+  /* ── PLAYER INFO CARD ── */
   var playerData = {
-    '阿尔塞纳·温格': { role:'Manager', pos:'MGR', color:'#e8d090' },
-    '延斯·莱曼': { role:'GK', pos:'GK', color:'#6090e8' },
-    '丹尼斯·博格坎普': { role:'CAM', pos:'CAM', color:'#e0c878' },
-    '蒂埃里·亨利': { role:'CF', pos:'CF', color:'#f06060' },
-    '塞斯克·法布雷加斯': { role:'CM', pos:'CM', color:'#f06060' },
-    '罗宾·范佩西': { role:'FW', pos:'FW', color:'#60d090' },
-    '萨米尔·纳斯里': { role:'LW', pos:'LW', color:'#f06060' },
-    '佩尔·默特萨克': { role:'CB', pos:'CB', color:'#e8d090' },
-    '桑蒂·卡索拉': { role:'CM', pos:'CM', color:'#f06060' },
-    '洛朗·科斯切尔尼': { role:'CB', pos:'CB', color:'#e8d090' },
-    '巴卡里·萨尼亚': { role:'RB', pos:'RB', color:'#6090e8' },
-    '基兰·吉布斯': { role:'LB', pos:'LB', color:'#6090e8' },
-    '亚历克西斯·桑切斯': { role:'LW', pos:'LW', color:'#f06060' },
-    '埃克托尔·贝莱林': { role:'RB', pos:'RB', color:'#6090e8' },
-    '皮埃尔-埃梅里克·奥巴梅扬': { role:'CF', pos:'CF', color:'#60d090' },
-    '格拉尼特·扎卡': { role:'CM', pos:'CM', color:'#f06060' },
-    '基耶兰·蒂尔尼': { role:'LB', pos:'LB', color:'#6090e8' },
-    '加布里埃尔·马加良斯': { role:'CB', pos:'CB', color:'#e8d090' },
-    '布卡约·萨卡': { role:'RW', pos:'RW', color:'#f06060' },
-    '马丁·厄德高': { role:'CM', pos:'CM', color:'#f06060' },
-    '威廉·萨利巴': { role:'CB', pos:'CB', color:'#e8d090' },
-    '德克兰·赖斯': { role:'CDM', pos:'CDM', color:'#60d090' },
-    '大卫·拉亚': { role:'GK', pos:'GK', color:'#6090e8' }
+    '阿尔塞纳·温格': {
+      pos:'MGR', color:'#e8d090', posLabel:'主教练',
+      nat:'🇫🇷 法国', period:'1996–2018', years:'22',
+      nickname:'不败教父', number:'—',
+      stats:[{v:'3',l:'英超冠军'},{v:'7',l:'足总杯'},{v:'1246',l:'执教场次'}],
+      honors:['🏆 3×英超','🏆 7×足总杯','🏆 6×社区盾'],
+      quote:'"我把自己的一生献给了阿森纳。"'
+    },
+    '延斯·莱曼': {
+      pos:'GK', color:'#6090e8', posLabel:'门将',
+      nat:'🇩🇪 德国', period:'2003–2008', years:'5',
+      nickname:'不败铁闸', number:'1',
+      stats:[{v:'200',l:'出场'},{v:'26',l:'不失球场次'},{v:'1',l:'欧冠决赛'}],
+      honors:['🏆 不败赛季','🏆 1×足总杯','🥈 欧冠亚军'],
+      quote:'"一个用怒火燃烧球场的门将。他的错误与伟大一样多。"'
+    },
+    '丹尼斯·博格坎普': {
+      pos:'CAM', color:'#e0c878', posLabel:'前腰',
+      nat:'🇳🇱 荷兰', period:'1995–2006', years:'11',
+      nickname:'冰王子', number:'10',
+      stats:[{v:'423',l:'出场'},{v:'120',l:'进球'},{v:'3',l:'英超冠军'}],
+      honors:['🏆 3×英超','🏆 4×足总杯','⭐ 名人堂'],
+      quote:'"有人说我太冷静了。在禁区里，冷静是一件好事。"'
+    },
+    '蒂埃里·亨利': {
+      pos:'CF', color:'#f06060', posLabel:'中锋',
+      nat:'🇫🇷 法国', period:'1999–2007', years:'8',
+      nickname:'国王', number:'14',
+      stats:[{v:'226',l:'进球'},{v:'4',l:'金靴'},{v:'2',l:'英超冠军'}],
+      honors:['🏆 2×英超','🏆 3×足总杯','⭐ 俱乐部传奇'],
+      quote:'"我热爱阿森纳，这里是我的家。"'
+    },
+    '塞斯克·法布雷加斯': {
+      pos:'CM', color:'#f06060', posLabel:'中场',
+      nat:'🇪🇸 西班牙', period:'2003–2011', years:'8',
+      nickname:'拉玛西亚天才', number:'4',
+      stats:[{v:'303',l:'出场'},{v:'57',l:'进球'},{v:'87',l:'助攻'}],
+      honors:['🏆 1×英超','🏆 1×足总杯','🏆 世界杯×1'],
+      quote:'"温格让我成为了足球运动员，但巴塞罗那是我的梦想。"'
+    },
+    '罗宾·范佩西': {
+      pos:'FW', color:'#60d090', posLabel:'前锋',
+      nat:'🇳🇱 荷兰', period:'2004–2012', years:'8',
+      nickname:'致命左脚', number:'16',
+      stats:[{v:'132',l:'进球'},{v:'1',l:'金靴'},{v:'96',l:'助攻'}],
+      honors:['🏆 1×英超','🏆 1×足总杯','🏅 年度最佳'],
+      quote:'"离开阿森纳是我职业生涯最艰难的决定。"'
+    },
+    '萨米尔·纳斯里': {
+      pos:'LW', color:'#f06060', posLabel:'左边锋',
+      nat:'🇫🇷 法国', period:'2008–2011', years:'3',
+      nickname:'马赛魔术师', number:'8',
+      stats:[{v:'125',l:'出场'},{v:'27',l:'进球'},{v:'41',l:'助攻'}],
+      honors:['🏆 1×足总杯'],
+      quote:'"离开是我的选择，我想赢。"'
+    },
+    '佩尔·默特萨克': {
+      pos:'CB', color:'#e8d090', posLabel:'中后卫',
+      nat:'🇩🇪 德国', period:'2011–2018', years:'7',
+      nickname:'大松树队长', number:'4',
+      stats:[{v:'221',l:'出场'},{v:'8',l:'进球'},{v:'1',l:'世界杯'}],
+      honors:['🏆 3×足总杯','🏆 2×社区盾','🏆 世界杯冠军'],
+      quote:'"他跑不快，却总在对的地方。这就是足球智慧的最好注脚。"'
+    },
+    '桑蒂·卡索拉': {
+      pos:'CM', color:'#f06060', posLabel:'中场',
+      nat:'🇪🇸 西班牙', period:'2012–2018', years:'6',
+      nickname:'双足精灵', number:'19',
+      stats:[{v:'180',l:'出场'},{v:'29',l:'进球'},{v:'45',l:'助攻'}],
+      honors:['🏆 2×足总杯','🏅 年度最佳','🏆 2×社区盾'],
+      quote:'"我的脚踝烂掉了，但我没有放弃。"'
+    },
+    '洛朗·科斯切尔尼': {
+      pos:'CB', color:'#e8d090', posLabel:'中后卫',
+      nat:'🇫🇷 法国', period:'2010–2019', years:'9',
+      nickname:'后防大脑', number:'6',
+      stats:[{v:'353',l:'出场'},{v:'15',l:'进球'},{v:'3',l:'足总杯'}],
+      honors:['🏆 3×足总杯','🏆 2×社区盾','🏅 队长'],
+      quote:'"阿森纳最后一个老式队长。"'
+    },
+    '巴卡里·萨尼亚': {
+      pos:'RB', color:'#6090e8', posLabel:'右后卫',
+      nat:'🇸🇳 塞内加尔', period:'2007–2014', years:'7',
+      nickname:'七年铁卫', number:'3',
+      stats:[{v:'284',l:'出场'},{v:'5',l:'进球'},{v:'28',l:'助攻'}],
+      honors:['🏆 1×足总杯','🏅 99.9%出勤'],
+      quote:'"他从不抱怨，从不缺席，从不喧闹。"'
+    },
+    '基兰·吉布斯': {
+      pos:'LB', color:'#6090e8', posLabel:'左后卫',
+      nat:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰', period:'2007–2017', years:'10',
+      nickname:'十年红白', number:'3',
+      stats:[{v:'229',l:'出场'},{v:'5',l:'进球'},{v:'3',l:'足总杯'}],
+      honors:['🏆 3×足总杯','🏅 青训出品'],
+      quote:'"十年，三个足总杯。他不喧哗，但他从来都在那里。"'
+    },
+    '亚历克西斯·桑切斯': {
+      pos:'LW', color:'#f06060', posLabel:'左边锋',
+      nat:'🇨🇱 智利', period:'2014–2018', years:'4',
+      nickname:'智利飞人', number:'7',
+      stats:[{v:'122',l:'出场'},{v:'60',l:'进球'},{v:'30',l:'金靴赛季'}],
+      honors:['🏆 2×足总杯','🏅 30球15助赛季'],
+      quote:'"他的斗志无人能及，每一次冲刺都像最后一次。"'
+    },
+    '埃克托尔·贝莱林': {
+      pos:'RB', color:'#6090e8', posLabel:'右后卫',
+      nat:'🇪🇸 西班牙', period:'2013–2021', years:'8',
+      nickname:'飞翔右闸', number:'2',
+      stats:[{v:'239',l:'出场'},{v:'9',l:'进球'},{v:'10.9s',l:'百米速度'}],
+      honors:['🏆 2×足总杯','🏅 英超最快右后卫'],
+      quote:'"他是一个有速度的艺术家，也是一个被伤病夺走巅峰的遗憾。"'
+    },
+    '皮埃尔-埃梅里克·奥巴梅扬': {
+      pos:'CF', color:'#60d090', posLabel:'中锋',
+      nat:'🇬🇦 加蓬', period:'2018–2022', years:'4',
+      nickname:'豹速杀手', number:'14',
+      stats:[{v:'68',l:'进球'},{v:'2',l:'金靴'},{v:'2',l:'足总杯决赛进球'}],
+      honors:['🏆 1×足总杯','🏅 2×金靴'],
+      quote:'"最好的时候，他是北伦敦夜空里最亮的星。"'
+    },
+    '格拉尼特·扎卡': {
+      pos:'CM', color:'#f06060', posLabel:'中场',
+      nat:'🇨🇭 瑞士', period:'2016–2023', years:'7',
+      nickname:'瑞士炸药', number:'34',
+      stats:[{v:'297',l:'出场'},{v:'23',l:'进球'},{v:'1',l:'德甲冠军'}],
+      honors:['🏆 2×足总杯','🏅 队长','🏆 德甲冠军(药厂)'],
+      quote:'"粗粝、直接、不妥协。在阿森纳最黑暗的那些年，他是最真实的燃烧体。"'
+    },
+    '基耶兰·蒂尔尼': {
+      pos:'LB', color:'#6090e8', posLabel:'左后卫',
+      nat:'🏴󠁧󠁢󠁳󠁣󠁴󠁿 苏格兰', period:'2019–2024', years:'5',
+      nickname:'苏格兰铁肺', number:'3',
+      stats:[{v:'124',l:'出场'},{v:'6',l:'进球'},{v:'∞',l:'斗志'}],
+      honors:['🏆 1×足总杯','🏅 人格样本'],
+      quote:'"他上场的时候，你知道他会为这支球队付出一切。 —— 阿尔特塔"'
+    },
+    '加布里埃尔·马加良斯': {
+      pos:'CB', color:'#e8d090', posLabel:'中后卫',
+      nat:'🇧🇷 巴西', period:'2020–至今', years:'6',
+      nickname:'巴西铁壁', number:'6',
+      stats:[{v:'180+',l:'出场'},{v:'16',l:'进球'},{v:'1',l:'英超冠军'}],
+      honors:['🏆 1×英超','🏅 最强中卫组合'],
+      quote:'"萨利巴在右，加布里埃尔在左。这堵墙，22年来最坚固的一道。"'
+    },
+    '布卡约·萨卡': {
+      pos:'RW', color:'#f06060', posLabel:'右边锋',
+      nat:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰', period:'2020–至今', years:'6',
+      nickname:'青训之光', number:'7',
+      stats:[{v:'60+',l:'进球'},{v:'50+',l:'助攻'},{v:'19',l:'首秀年龄'}],
+      honors:['🏆 1×英超','🏅 连续年度最佳'],
+      quote:'"那一晚的沉默，换来了后来无数次的爆发。"'
+    },
+    '马丁·厄德高': {
+      pos:'CM', color:'#f06060', posLabel:'中场',
+      nat:'🇳🇴 挪威', period:'2021–至今', years:'5',
+      nickname:'天才队长', number:'8',
+      stats:[{v:'50+',l:'进球'},{v:'60+',l:'助攻'},{v:'1',l:'队长'}],
+      honors:['🏆 1×英超','🏅 连续年度最佳','🏅 队长'],
+      quote:'"皇马放走的那块拼图，被阿森纳找到，恰好完整了那幅画。"'
+    },
+    '威廉·萨利巴': {
+      pos:'CB', color:'#e8d090', posLabel:'中后卫',
+      nat:'🇫🇷 法国', period:'2019–至今', years:'7',
+      nickname:'法国堡垒', number:'2',
+      stats:[{v:'120+',l:'出场'},{v:'8',l:'进球'},{v:'3',l:'租借等待'}],
+      honors:['🏆 1×英超','🏅 定海神针','🏆 法国主力'],
+      quote:'"三年的等待，换来一座英超冠军。时间从不辜负真正的耐心。"'
+    },
+    '德克兰·赖斯': {
+      pos:'CDM', color:'#60d090', posLabel:'后腰',
+      nat:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 英格兰', period:'2023–至今', years:'3',
+      nickname:'亿级基石', number:'41',
+      stats:[{v:'1.05亿',l:'转会费'},{v:'∞',l:'跑动'},{v:'1',l:'年度最佳'}],
+      honors:['🏆 1×英超','🏅 转会纪录','🏅 年度最佳'],
+      quote:'"1.05亿英镑，在英超是纪录，在阿森纳是奠基石。"'
+    },
+    '大卫·拉亚': {
+      pos:'GK', color:'#6090e8', posLabel:'门将',
+      nat:'🇪🇸 西班牙', period:'2023–至今', years:'3',
+      nickname:'冠军守门人', number:'22',
+      stats:[{v:'22',l:'等待之年'},{v:'1',l:'英超冠军'},{v:'∞',l:'意义'}],
+      honors:['🏆 1×英超','🏅 冠军守门人'],
+      quote:'"2026年5月20日，他守住了最后一道门，拿到了那块等待22年的金牌。"'
+    }
   };
 
-  // Generate initials from Chinese name (last 2 chars)
-  function getInitials(name) {
-    if (!name) return '?';
-    // For Chinese names, take last 2 characters
-    if (/[\u4e00-\u9fff]/.test(name)) {
-      return name.length >= 2 ? name.slice(-2) : name;
-    }
-    // For English names, take first letter of each word
-    return name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
-  }
-
   var modal = document.getElementById('photoModal');
-  var modalImg = document.getElementById('photoModalImg');
-  var modalName = document.getElementById('photoModalName');
-  var modalRole = document.getElementById('photoModalRole');
-  var modalPeriod = document.getElementById('photoModalPeriod');
-  var modalLoading = document.getElementById('photoModalLoading');
+  var modalContent = document.getElementById('photoModalContent');
 
-  function openPhotoModal(name, role, period) {
+  function openPhotoModal(name) {
     var data = playerData[name];
     if (!data) return;
-    modalName.textContent = name;
-    modalRole.textContent = role || data.role;
-    modalPeriod.textContent = period || '';
-    modalImg.style.opacity = '0';
-    modalImg.src = '';
-    modalLoading.style.display = 'none';
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    
-    // Generate letter avatar
-    var initials = getInitials(name);
-    var posColor = data.color;
-    modalLoading.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:linear-gradient(135deg,rgba(22,6,14,0.95),rgba(8,3,5,0.98));">'
-      + '<div style="width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff;background:linear-gradient(135deg,' + posColor + ',' + posColor + '88);box-shadow:0 8px 32px ' + posColor + '44,0 0 60px ' + posColor + '22;letter-spacing:2px;">' + initials + '</div>'
-      + '<div style="font-size:13px;font-weight:700;color:' + posColor + ';letter-spacing:3px;text-transform:uppercase;">' + data.pos + '</div>'
-      + '</div>';
-    modalLoading.style.display = 'flex';
+
+    // Build card HTML
+    var html = '<button class="photo-modal-close" id="photoModalClose">✕</button>';
+    // Header
+    html += '<div class="pinfo-header">';
+    html += '<div class="pinfo-pos-icon" style="background:linear-gradient(135deg,' + data.color + ',' + data.color + '88);border-color:' + data.color + ';">' + data.pos + '</div>';
+    html += '<div class="pinfo-name">' + name + '</div>';
+    html += '<div class="pinfo-nickname">' + data.nickname + '</div>';
+    html += '<div class="pinfo-meta">';
+    html += '<span class="pinfo-meta-item">' + data.nat + '</span>';
+    html += '<span class="pinfo-meta-dot"></span>';
+    html += '<span class="pinfo-meta-item">' + data.period + ' · ' + data.years + '年</span>';
+    html += '<span class="pinfo-meta-dot"></span>';
+    html += '<span class="pinfo-meta-item">#' + data.number + '</span>';
+    html += '</div></div>';
+    // Stats
+    html += '<div class="pinfo-stats">';
+    for (var i = 0; i < data.stats.length; i++) {
+      html += '<div class="pinfo-stat"><div class="pinfo-stat-val">' + data.stats[i].v + '</div><div class="pinfo-stat-label">' + data.stats[i].l + '</div></div>';
+    }
+    html += '</div>';
+    // Honors
+    if (data.honors && data.honors.length > 0) {
+      html += '<div class="pinfo-honors"><div class="pinfo-honors-title">荣誉</div><div class="pinfo-honors-list">';
+      for (var h = 0; h < data.honors.length; h++) {
+        var cls = data.honors[h].indexOf('英超') > -1 || data.honors[h].indexOf('冠军') > -1 ? 'gold' : (data.honors[h].indexOf('足总杯') > -1 ? 'red' : 'white');
+        html += '<span class="pinfo-honor-badge ' + cls + '">' + data.honors[h] + '</span>';
+      }
+      html += '</div></div>';
+    }
+    // Quote
+    if (data.quote) {
+      html += '<div class="pinfo-quote"><div class="pinfo-quote-text">' + data.quote + '</div></div>';
+    }
+    // Footer
+    html += '<div class="pinfo-footer"><div class="pinfo-era-tag"><span>' + data.posLabel + '</span> · ' + data.pos + '</div>';
+    html += '<div class="pinfo-number">' + data.period + '</div></div>';
+
+    modalContent.innerHTML = html;
+
+    // Re-bind close button
+    document.getElementById('photoModalClose').addEventListener('click', closePhotoModal);
   }
+
   function closePhotoModal() {
     modal.classList.remove('active');
     document.body.style.overflow = '';
-    setTimeout(function(){ modalImg.src = ''; }, 400);
   }
-  document.getElementById('photoModalClose').addEventListener('click', closePhotoModal);
   modal.addEventListener('click', function(e) {
     if (e.target === modal) closePhotoModal();
   });
@@ -2668,21 +2962,11 @@
     card.appendChild(hint);
     
     card.addEventListener('click', function(e) {
-      // Don't trigger if clicking on a link inside the card
       if (e.target.tagName === 'A') return;
       var nameEl = card.querySelector('.tl-name');
-      var posEl = card.querySelector('.tl-pos');
-      var natEl = card.querySelector('.tl-nat');
       if (!nameEl) return;
       var name = nameEl.textContent.trim();
-      var role = posEl ? posEl.textContent.trim() : '';
-      var period = natEl ? natEl.textContent.split('|')[1] : '';
-      if (period) {
-        // Extract just the year range (e.g. "1996–2018")
-        var m = period.match(/\d{4}[^0-9]*\d{0,4}/);
-        period = m ? m[0].trim() : period.trim();
-      }
-      openPhotoModal(name, role, period);
+      openPhotoModal(name);
     });
   });
 
