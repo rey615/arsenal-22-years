@@ -693,6 +693,187 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* ── NEXT CHAPTER BUTTON ── */
+  .next-chapter {
+    display: flex;
+    justify-content: center;
+    padding: 48px 24px 24px;
+  }
+  .next-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 48px;
+    background: transparent;
+    border: 1px solid rgba(239,1,7,0.3);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    color: var(--text-2);
+    transition: all 0.4s var(--ease);
+    overflow: hidden;
+  }
+  .next-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(239,1,7,0.08), rgba(156,130,74,0.08));
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
+  .next-btn:hover::before { opacity: 1; }
+  .next-btn:hover {
+    border-color: var(--red);
+    color: var(--text-1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(239,1,7,0.15), 0 0 0 1px rgba(239,1,7,0.1);
+  }
+  .next-btn:active { transform: translateY(0) scale(0.98); }
+  .next-btn-text {
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--gold-bright);
+  }
+  .next-btn-arrow {
+    font-size: 24px;
+    color: var(--red);
+    transition: transform 0.3s var(--ease);
+  }
+  .next-btn:hover .next-btn-arrow { transform: translateX(4px); }
+  .next-btn-label {
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 1px;
+  }
+
+  /* ── ENHANCED ANIMATIONS ── */
+
+  /* Hero stars pulse */
+  @keyframes starPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.2); }
+  }
+  .hero-stars::after {
+    content: '✦';
+    position: absolute;
+    top: 15%;
+    right: 20%;
+    font-size: 18px;
+    color: var(--gold-bright);
+    animation: starPulse 3s ease-in-out infinite;
+  }
+  .hero-stars::before {
+    content: '✦';
+    position: absolute;
+    bottom: 25%;
+    left: 15%;
+    font-size: 12px;
+    color: var(--red);
+    animation: starPulse 4s ease-in-out 1s infinite;
+  }
+
+  /* Hero watermark float */
+  @keyframes watermarkFloat {
+    0%, 100% { transform: translate(-50%, -50%) rotate(-15deg); }
+    50% { transform: translate(-50%, -50%) rotate(-12deg) scale(1.05); }
+  }
+  .hero-watermark {
+    animation: watermarkFloat 8s ease-in-out infinite;
+  }
+
+  /* Card hover glow */
+  .tl-card {
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  }
+  .tl-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(239,1,7,0.06);
+  }
+
+  /* Timeline item enhanced entrance */
+  .tl-item.reveal {
+    opacity: 0;
+    transform: translateY(40px) scale(0.97);
+    transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  }
+  .tl-item.reveal.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Prologue year glow pulse */
+  @keyframes yearGlow {
+    0%, 100% { text-shadow: 0 0 20px rgba(239,1,7,0.3), 0 0 60px rgba(239,1,7,0.1); }
+    50% { text-shadow: 0 0 30px rgba(239,1,7,0.5), 0 0 80px rgba(239,1,7,0.2); }
+  }
+  .prologue-year {
+    animation: yearGlow 4s ease-in-out infinite;
+  }
+
+  /* Scroll indicator bounce */
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50% { transform: translateY(8px); opacity: 1; }
+  }
+  .prologue-scroll svg {
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+
+  /* Tab switch ripple */
+  .tab {
+    position: relative;
+    overflow: hidden;
+  }
+  .tab::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.15), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .tab:hover::after { opacity: 1; }
+
+  /* Quote text shimmer */
+  .quote {
+    position: relative;
+    display: inline;
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  /* Number count glow */
+  .h-num .n {
+    transition: text-shadow 0.3s;
+  }
+  .h-num .n.gold {
+    text-shadow: 0 0 20px rgba(156,130,74,0.4);
+  }
+
+  /* Background ambient glow for panels */
+  .panel.on::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 20%, rgba(239,1,7,0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(156,130,74,0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+    animation: ambientShift 12s ease-in-out infinite alternate;
+  }
+  @keyframes ambientShift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(30px, -20px); }
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
     section { padding: 40px 20px; }
@@ -766,6 +947,9 @@
     .final-image-highlight { font-size: 14px !important; padding: 16px 18px; }
     .final-image-epilogue { font-size: 11px !important; letter-spacing: 1.5px; }
 
+    .next-btn { padding: 16px 32px; }
+    .next-btn-text { font-size: 12px; letter-spacing: 2px; }
+    .next-btn-arrow { font-size: 20px; }
     .btt { width: 38px; height: 38px; bottom: 16px; right: 16px; font-size: 18px; }
 
     footer { padding: 24px 16px; margin-top: 28px; }
@@ -803,6 +987,11 @@
     .final-image-title, .final-image-wrap, .final-image-caption p { opacity: 1; transform: none; filter: none; }
     .closing h3, .closing p, .closing-year { opacity: 1; transform: none; }
     .closing-year { opacity: 0.08; }
+    .prologue-year { animation: none; }
+    .hero-watermark { animation: none; }
+    .hero-stars::before, .hero-stars::after { animation: none; }
+    .prologue-scroll svg { animation: none; }
+    .panel.on::before { animation: none; }
   }
 </style>
 </head>
@@ -907,10 +1096,18 @@
     </div>
   </div>
 </section>
+
+<div class="next-chapter">
+  <button class="next-btn" onclick="go('era1')">
+    <span class="next-btn-text">进入下一章</span>
+    <span class="next-btn-arrow">→</span>
+    <span class="next-btn-label">🏛️ 诸神黄昏 · 2005–2015</span>
+  </button>
+</div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     PANEL 1: 诸神黄昏 2005–2015
+     ERA 1: 诸神黄昏 · 2005–2015
 ═══════════════════════════════════════════════ -->
 <div id="p-era1" class="panel">
 <section>
@@ -1112,10 +1309,18 @@
 
   </div>
 </section>
+
+<div class="next-chapter">
+  <button class="next-btn" onclick="go('era2')">
+    <span class="next-btn-text">进入下一章</span>
+    <span class="next-btn-arrow">→</span>
+    <span class="next-btn-label">🔴 王者归来 · 2016–2026</span>
+  </button>
+</div>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     PANEL 2: 王者归来 2016–2026
+     ERA 2: 王者归来 · 2016–2026
 ═══════════════════════════════════════════════ -->
 <div id="p-era2" class="panel">
 <section>
@@ -1317,6 +1522,14 @@
 
   </div>
 </section>
+
+<div class="next-chapter">
+  <button class="next-btn" onclick="go('formation')">
+    <span class="next-btn-text">进入下一章</span>
+    <span class="next-btn-arrow">→</span>
+    <span class="next-btn-label">⚽ 两套阵容</span>
+  </button>
+</div>
 </div>
 
 <!-- ══════════════════════════════════════════════
