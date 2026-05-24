@@ -1001,7 +1001,8 @@
     content: '📷';
     font-size: 12px;
   }
-  .tl-item:hover .click-hint { opacity: 0.7; }
+  .tl-item:hover .click-hint,
+  .prologue-wrap .tl-card:hover .click-hint { opacity: 0.7; }
 
   /* ── BACK TO TOP ── */
   .btt {
@@ -2629,7 +2630,7 @@
     if (!data) return;
     modalName.textContent = name;
     modalRole.textContent = role || data.role;
-    modalPeriod.textContent = period;
+    modalPeriod.textContent = period || '';
     modalImg.style.opacity = '0';
     modalImg.src = '';
     modalLoading.style.display = 'none';
