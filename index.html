@@ -987,18 +987,6 @@
     display: flex; align-items: center; justify-content: center;
     color: var(--text-3); font-size: 13px;
   }
-  .photo-modal-loading::after {
-    content: '';
-    width: 24px; height: 24px;
-    border: 2px solid var(--border);
-    border-top-color: var(--red);
-    border-radius: 50%;
-    animation: modalSpin 0.8s linear infinite;
-    margin-left: 10px;
-  }
-  @keyframes modalSpin {
-    to { transform: rotate(360deg); }
-  }
 
   /* Click hint on cards */
   .tl-card { cursor: pointer; }
@@ -2590,71 +2578,43 @@
   }
   window.addEventListener('scroll', updateProgress, {passive: true});
 
-  // ── PHOTO MODAL ──
-  // Map Chinese names to English Wikipedia titles for API lookup
-  var photoWikiTitles = {
-    '阿尔塞纳·温格': 'Arsène_Wenger',
-    '延斯·莱曼': 'Jens_Lehmann_(footballer)',
-    '丹尼斯·博格坎普': 'Dennis_Bergkamp',
-    '蒂埃里·亨利': 'Thierry_Henry',
-    '塞斯克·法布雷加斯': 'Cesc_Fàbregas',
-    '罗宾·范佩西': 'Robin_van_Persie',
-    '萨米尔·纳斯里': 'Samir_Nasri',
-    '佩尔·默特萨克': 'Per_Mertesacker',
-    '桑蒂·卡索拉': 'Santi_Cazorla',
-    '洛朗·科斯切尔尼': 'Laurent_Koscielny',
-    '巴卡里·萨尼亚': 'Bacary_Sagna',
-    '基兰·吉布斯': 'Kieran_Gibbs',
-    '亚历克西斯·桑切斯': 'Alexis_Sánchez',
-    '埃克托尔·贝莱林': 'Héctor_Bellerín',
-    '皮埃尔-埃梅里克·奥巴梅扬': 'Pierre-Emerick_Aubameyang',
-    '格拉尼特·扎卡': 'Granit_Xhaka',
-    '基耶兰·蒂尔尼': 'Kieran_Tierney',
-    '加布里埃尔·马加良斯': 'Gabriel_Magalhães',
-    '布卡约·萨卡': 'Bukayo_Saka',
-    '马丁·厄德高': 'Martin_Ødegaard',
-    '威廉·萨利巴': 'William_Saliba',
-    '德克兰·赖斯': 'Declan_Rice',
-    '大卫·拉亚': 'David_Raya'
+  /* ── PHOTO MODAL ── */
+  // Player data with position colors
+  var playerData = {
+    '阿尔塞纳·温格': { role:'Manager', pos:'MGR', color:'#e8d090' },
+    '延斯·莱曼': { role:'GK', pos:'GK', color:'#6090e8' },
+    '丹尼斯·博格坎普': { role:'CAM', pos:'CAM', color:'#e0c878' },
+    '蒂埃里·亨利': { role:'CF', pos:'CF', color:'#f06060' },
+    '塞斯克·法布雷加斯': { role:'CM', pos:'CM', color:'#f06060' },
+    '罗宾·范佩西': { role:'FW', pos:'FW', color:'#60d090' },
+    '萨米尔·纳斯里': { role:'LW', pos:'LW', color:'#f06060' },
+    '佩尔·默特萨克': { role:'CB', pos:'CB', color:'#e8d090' },
+    '桑蒂·卡索拉': { role:'CM', pos:'CM', color:'#f06060' },
+    '洛朗·科斯切尔尼': { role:'CB', pos:'CB', color:'#e8d090' },
+    '巴卡里·萨尼亚': { role:'RB', pos:'RB', color:'#6090e8' },
+    '基兰·吉布斯': { role:'LB', pos:'LB', color:'#6090e8' },
+    '亚历克西斯·桑切斯': { role:'LW', pos:'LW', color:'#f06060' },
+    '埃克托尔·贝莱林': { role:'RB', pos:'RB', color:'#6090e8' },
+    '皮埃尔-埃梅里克·奥巴梅扬': { role:'CF', pos:'CF', color:'#60d090' },
+    '格拉尼特·扎卡': { role:'CM', pos:'CM', color:'#f06060' },
+    '基耶兰·蒂尔尼': { role:'LB', pos:'LB', color:'#6090e8' },
+    '加布里埃尔·马加良斯': { role:'CB', pos:'CB', color:'#e8d090' },
+    '布卡约·萨卡': { role:'RW', pos:'RW', color:'#f06060' },
+    '马丁·厄德高': { role:'CM', pos:'CM', color:'#f06060' },
+    '威廉·萨利巴': { role:'CB', pos:'CB', color:'#e8d090' },
+    '德克兰·赖斯': { role:'CDM', pos:'CDM', color:'#60d090' },
+    '大卫·拉亚': { role:'GK', pos:'GK', color:'#6090e8' }
   };
 
-  // Cache for fetched photo URLs
-  var photoUrlCache = {};
-
-  // Fetch photo URL from Wikipedia API (supports CORS)
-  function fetchPhotoUrl(wikiTitle, callback) {
-    if (photoUrlCache[wikiTitle]) {
-      callback(photoUrlCache[wikiTitle]);
-      return;
+  // Generate initials from Chinese name (last 2 chars)
+  function getInitials(name) {
+    if (!name) return '?';
+    // For Chinese names, take last 2 characters
+    if (/[\u4e00-\u9fff]/.test(name)) {
+      return name.length >= 2 ? name.slice(-2) : name;
     }
-    var apiUrl = 'https://en.wikipedia.org/w/api.php?action=query&titles='
-      + encodeURIComponent(wikiTitle)
-      + '&prop=pageimages&format=json&pithumbsize=300&origin=*';
-    try {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', apiUrl, true);
-      xhr.timeout = 8000;
-      xhr.onload = function() {
-        try {
-          var data = JSON.parse(xhr.responseText);
-          var pages = data.query && data.query.pages;
-          if (pages) {
-            for (var pid in pages) {
-              var thumb = pages[pid].thumbnail && pages[pid].thumbnail.source;
-              if (thumb) {
-                photoUrlCache[wikiTitle] = thumb;
-                callback(thumb);
-                return;
-              }
-            }
-          }
-          callback(null);
-        } catch(e) { callback(null); }
-      };
-      xhr.onerror = function() { callback(null); };
-      xhr.ontimeout = function() { callback(null); };
-      xhr.send();
-    } catch(e) { callback(null); }
+    // For English names, take first letter of each word
+    return name.split(' ').map(function(w) { return w[0]; }).join('').toUpperCase().slice(0, 2);
   }
 
   var modal = document.getElementById('photoModal');
@@ -2665,35 +2625,25 @@
   var modalLoading = document.getElementById('photoModalLoading');
 
   function openPhotoModal(name, role, period) {
-    var wikiTitle = photoWikiTitles[name];
-    if (!wikiTitle) return;
+    var data = playerData[name];
+    if (!data) return;
     modalName.textContent = name;
-    modalRole.textContent = role;
+    modalRole.textContent = role || data.role;
     modalPeriod.textContent = period;
     modalImg.style.opacity = '0';
     modalImg.src = '';
-    modalLoading.style.display = 'flex';
-    modalLoading.textContent = '加载中';
-    modalLoading.className = 'photo-modal-loading';
+    modalLoading.style.display = 'none';
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     
-    fetchPhotoUrl(wikiTitle, function(url) {
-      if (url) {
-        modalImg.src = url;
-        modalImg.onload = function() {
-          modalImg.style.opacity = '1';
-          modalLoading.style.display = 'none';
-        };
-        modalImg.onerror = function() {
-          modalLoading.textContent = '照片加载失败';
-          modalLoading.className = 'photo-modal-loading error';
-        };
-      } else {
-        modalLoading.textContent = '暂无照片';
-        modalLoading.className = 'photo-modal-loading error';
-      }
-    });
+    // Generate letter avatar
+    var initials = getInitials(name);
+    var posColor = data.color;
+    modalLoading.innerHTML = '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:linear-gradient(135deg,rgba(22,6,14,0.95),rgba(8,3,5,0.98));">'
+      + '<div style="width:120px;height:120px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;color:#fff;background:linear-gradient(135deg,' + posColor + ',' + posColor + '88);box-shadow:0 8px 32px ' + posColor + '44,0 0 60px ' + posColor + '22;letter-spacing:2px;">' + initials + '</div>'
+      + '<div style="font-size:13px;font-weight:700;color:' + posColor + ';letter-spacing:3px;text-transform:uppercase;">' + data.pos + '</div>'
+      + '</div>';
+    modalLoading.style.display = 'flex';
   }
   function closePhotoModal() {
     modal.classList.remove('active');
@@ -2713,7 +2663,7 @@
     // Add click hint
     var hint = document.createElement('span');
     hint.className = 'click-hint';
-    hint.textContent = '查看照片';
+    hint.textContent = '查看详情';
     card.appendChild(hint);
     
     card.addEventListener('click', function(e) {
