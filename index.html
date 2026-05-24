@@ -201,7 +201,8 @@
   }
   .tab.on { color: var(--red); border-bottom-color: var(--red); }
   .tab:hover:not(.on) { color: var(--text-1); }
-  .panel { display: block; opacity: 1; }
+  .panel { display: block; opacity: 1; min-height: 100vh; min-height: 100dvh; padding-bottom: 40px; }
+  .panel + .panel { border-top: 1px solid var(--border); }
 
   /* ── SECTION DIVIDER ── */
   .section-divider {
@@ -596,6 +597,7 @@
   }
 
   @media (max-width: 640px) {
+    .panel { min-height: auto; padding-bottom: 24px; }
     .hero { min-height: 500px; padding: 60px 16px 40px; }
     .hero h1 { font-size: 40px; letter-spacing: -1.5px; }
     .hero-sub { font-size: 15px; }
@@ -794,8 +796,6 @@
   </div>
 </section>
 </div>
-
-<div class="section-divider"><div class="sd-line"></div><div class="sd-icon">⚔️</div><div class="sd-line"></div></div>
 
 <!-- ══════════════════════════════════════════════
      PANEL 1: 诸神黄昏 2005–2015
@@ -1002,8 +1002,6 @@
 </section>
 </div>
 
-<div class="section-divider"><div class="sd-line"></div><div class="sd-icon">🔴</div><div class="sd-line"></div></div>
-
 <!-- ══════════════════════════════════════════════
      PANEL 2: 王者归来 2016–2026
 ═══════════════════════════════════════════════ -->
@@ -1208,8 +1206,6 @@
   </div>
 </section>
 </div>
-
-<div class="section-divider"><div class="sd-line"></div><div class="sd-icon">⚽</div><div class="sd-line"></div></div>
 
 <!-- ══════════════════════════════════════════════
      PANEL 3: 两套阵容
