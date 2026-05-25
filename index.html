@@ -285,8 +285,15 @@
   }
   .tab:hover:not(.on)::after { width: 40%; }
   .tab:active { transform: translateY(0); }
-  .panel { display: none; opacity: 0; padding-bottom: 0; }
-  .panel.on { display: block; opacity: 1; }
+  .panel { 
+    display: none; 
+    opacity: 0; 
+    padding-bottom: 0;
+  }
+  .panel.on { 
+    display: block; 
+    opacity: 1;
+  }
 
   /* ── SECTION DIVIDER ── */
   .section-divider {
@@ -842,6 +849,8 @@
     width: 100%;
     height: auto;
     display: block;
+    aspect-ratio: 3/2;
+    object-fit: cover;
   }
   .final-image-caption {
     max-width: 600px;
@@ -2715,11 +2724,8 @@
 
   // ── TAB SWITCH ──
   window.go = function(name){
-    // Hide all panels
-    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
-    // Show target panel
-    var p = document.getElementById('p-'+name);
-    if(p) p.classList.add('on');
+    // Scroll to top first (before hiding panels to avoid layout jump)
+    window.scrollTo({top: 0, behavior:'auto'});
     // Show/hide hero: only visible on prologue
     var hero = document.querySelector('.hero');
     if(hero) {
@@ -2729,8 +2735,11 @@
         hero.style.display = 'none';
       }
     }
-    // Scroll to top of content area
-    window.scrollTo({top: 0, behavior:'auto'});
+    // Hide all panels
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
+    // Show target panel
+    var p = document.getElementById('p-'+name);
+    if(p) p.classList.add('on');
     // Update tab highlight
     document.querySelectorAll('.tab').forEach(function(t,i){
       t.classList.remove('on');
@@ -2982,15 +2991,15 @@
     // Prevent double-open
     if (modal.classList.contains('active')) return;
     // Lock scroll (iOS Safari fix)
-    window._scrollY = window.scrollY;
-    document.documentElement.style.scrollTop = window._scrollY; // Firefox fix
+    window._scrollY = window.scrollY || document.documentElement.scrollTop;
+    document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.top = '-' + window._scrollY + 'px';
     document.body.style.left = '0';
     document.body.style.right = '0';
     document.body.style.width = '100%';
-    document.body.style.overflow = 'hidden';
     document.body.style.bottom = '0';
+    document.documentElement.style.overflow = 'hidden';
 
     modal.classList.add('active');
 
@@ -3042,14 +3051,14 @@
     modal.classList.remove('active');
     // Restore scroll (iOS Safari fix)
     var scrollY = window._scrollY || 0;
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.left = '';
     document.body.style.right = '';
     document.body.style.width = '';
     document.body.style.bottom = '';
-    document.body.style.overflow = '';
-    document.documentElement.style.scrollTop = scrollY; // Firefox fix
     window.scrollTo(0, scrollY);
   }
   modal.addEventListener('click', function(e) {
