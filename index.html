@@ -2,7 +2,11 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<!-- WeChat X5 kernel specific meta tags -->
+<meta name="x5-orientation" content="portrait">
+<meta name="x5-page-mode" content="app">
+<meta name="format-detection" content="telephone=no">
 <meta name="description" content="22年，22人，2套阵容。从2004年不败夺冠到2026年王者归来，这是枪手的史诗。">
 <meta property="og:title" content="Arsenal · 22年的等待">
 <meta property="og:description" content="2004年不败夺冠后，阿森纳等了22年。22年，恰好是两套首发阵容。从亨利到萨卡，从温格到阿尔特塔——22人，2套阵容，1个答案。">
@@ -38,7 +42,12 @@
     --ease: cubic-bezier(0.4,0,0.2,1);
   }
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+  html { 
+    scroll-behavior: auto; 
+    -webkit-text-size-adjust: 100%; 
+    height: 100%;
+    overflow-y: auto;
+  }
   body {
     font-family:'PingFang SC','Helvetica Neue','Microsoft YaHei',sans-serif;
     background: var(--bg-deep);
@@ -46,6 +55,8 @@
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    min-height: 100%;
+    position: relative;
   }
 
   /* ── CUSTOM SELECTION ── */
@@ -2718,6 +2729,20 @@
 
 <script>
 (function(){
+  // ── WeChat X5 kernel scroll fix ──
+  // Prevent scroll jump caused by address bar show/hide
+  var lastScrollTop = 0;
+  var scrollTimeout = null;
+  window.addEventListener('scroll', function(e) {
+    var currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+    // Detect sudden large scroll jump (likely caused by address bar)
+    if (Math.abs(currentScrollTop - lastScrollTop) > 200 && currentScrollTop < lastScrollTop) {
+      // This is likely an address bar triggered jump, ignore it
+      return;
+    }
+    lastScrollTop = currentScrollTop;
+  }, { passive: true });
+
   var tabNames = ['prologue','era1','era2','formation'];
   var currentPanel = 'prologue';
   var isSwitching = false;
@@ -2777,6 +2802,9 @@
   // Hero fade-in
   document.querySelector('.hero').classList.add('fade-in');
 
+  // ── Touch device detection ──
+  var isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
   // ── Back to top ──
   var btt = document.getElementById('btt');
   // Disable btt toggle on touch devices to prevent WeChat scroll jump
@@ -2789,7 +2817,6 @@
 
   // ── READING PROGRESS BAR ──
   var progressBar = document.getElementById('progressBar');
-  var isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
   function updateProgress() {
     // Disable progress bar on touch devices to prevent WeChat scroll jump
     if (isTouchDevice) return;
