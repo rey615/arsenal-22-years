@@ -1866,10 +1866,6 @@
     .formation-player:hover { transform: none; box-shadow: none; z-index: auto; }
     /* Show click hint on touch devices */
     .tl-card .click-hint { opacity: 0.4; }
-    /* Disable 3D transforms on touch — simplify entrance */
-    .tl-card { transform-style: flat; }
-    .tl-item.reveal { opacity: 0; filter: none; transform: translateX(-30px) scale(0.97); }
-    .tl-item.reveal.visible { opacity: 1; transform: none; filter: none; }
     /* Touch optimization */
     .tl-card, .tab, .next-btn, .btt, .photo-modal-close { touch-action: manipulation; }
     /* Disable hero animations on touch devices to prevent WeChat jump */
@@ -2732,7 +2728,6 @@
   // ── WeChat X5 kernel scroll fix ──
   // Prevent scroll jump caused by address bar show/hide
   var lastScrollTop = 0;
-  var scrollTimeout = null;
   window.addEventListener('scroll', function(e) {
     var currentScrollTop = window.scrollY || document.documentElement.scrollTop;
     // Detect sudden large scroll jump (likely caused by address bar)
@@ -3148,7 +3143,6 @@
       applyStaggeredDelays(prologuePanel);
     }
     // Disable count-up animation on touch devices to prevent WeChat scroll jump
-    var isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
     if (!isTouchDevice) {
       animateCountUp();
     } else {
