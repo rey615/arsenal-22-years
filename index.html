@@ -2709,9 +2709,16 @@
 <script>
 (function(){
   var tabNames = ['prologue','era1','era2','formation'];
+  var currentPanel = 'prologue';
+  var isSwitching = false;
 
   // ── TAB SWITCH ──
   window.go = function(name){
+    // Prevent switching to same panel or concurrent switches
+    if(name === currentPanel || isSwitching) return;
+    isSwitching = true;
+    currentPanel = name;
+    
     // Show/hide hero first
     var hero = document.querySelector('.hero');
     if(hero) {
@@ -2721,8 +2728,7 @@
     document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('on'); });
     var p = document.getElementById('p-'+name);
     if(p) p.classList.add('on');
-    // Force layout reflow then scroll to prevent jump
-    document.body.offsetHeight;
+    // Scroll to top
     window.scrollTo({top: 0, behavior:'auto'});
     // Update tab highlight
     document.querySelectorAll('.tab').forEach(function(t,i){
@@ -2735,7 +2741,11 @@
       if(link.getAttribute('data-section') === name) link.classList.add('active');
     });
     // Re-trigger reveal animations for new panel
-    setTimeout(function(){ initReveal(p); applyStaggeredDelays(p); }, 50);
+    setTimeout(function(){ 
+      initReveal(p); 
+      applyStaggeredDelays(p); 
+      isSwitching = false;
+    }, 50);
   };
 
   // ── Reveal on scroll ──
@@ -2745,12 +2755,6 @@
       if(!el._observed){
         el._observed = true;
         observer.observe(el);
-      }
-      // Only auto-show elements that are already well within viewport
-      // Use a smaller threshold to avoid triggering animations during scroll
-      var r = el.getBoundingClientRect();
-      if(r.top > 0 && r.top < window.innerHeight * 0.5) {
-        el.classList.add('visible');
       }
     });
   }
@@ -3045,10 +3049,8 @@
     document.body.style.right = '';
     document.body.style.width = '';
     document.body.style.bottom = '';
-    // Delay scroll restoration to next frame to avoid jump
-    requestAnimationFrame(function() {
-      window.scrollTo(0, scrollY);
-    });
+    // Restore scroll position immediately
+    window.scrollTo(0, scrollY);
   }
   modal.addEventListener('click', function(e) {
     if (!modalContent.contains(e.target)) closePhotoModal();
