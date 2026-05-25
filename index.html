@@ -1861,6 +1861,13 @@
     .tl-item.reveal.visible { opacity: 1; transform: none; filter: none; }
     /* Touch optimization */
     .tl-card, .tab, .next-btn, .btt, .photo-modal-close { touch-action: manipulation; }
+    /* Disable hero animations on touch devices to prevent WeChat jump */
+    .hero.fade-in .hero-inner,
+    .hero.fade-in .hero-eyebrow,
+    .hero.fade-in .hero h1,
+    .hero.fade-in .hero-sub,
+    .hero.fade-in .h-num { animation: none; opacity: 1; transform: none; }
+    .hero-watermark, .hero-stars::before, .hero-stars::after { animation: none; }
   }
 
   /* ── REDUCED MOTION ── */
