@@ -848,18 +848,20 @@
   }
   .final-image-wrap {
     margin: 0 auto 40px;
-    max-width: 600px;
+    max-width: 500px;
     border-radius: var(--r-md);
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(239,1,7,0.15);
     border: 1px solid var(--border);
+    background: #000;
   }
   .final-image-wrap img {
     width: 100%;
     height: auto;
     display: block;
-    aspect-ratio: 3/2;
-    object-fit: cover;
+    aspect-ratio: 2/3;
+    object-fit: contain;
+    background: #000;
   }
   .final-image-caption {
     max-width: 600px;
