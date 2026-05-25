@@ -2975,21 +2975,22 @@
   var modal = document.getElementById('photoModal');
   var modalContent = document.getElementById('photoModalContent');
 
+  // Prevent scroll on touch devices when modal is open
+  function preventTouchMove(e) {
+    if (modal.classList.contains('active') && !modalContent.contains(e.target)) {
+      e.preventDefault();
+    }
+  }
+
   function openPhotoModal(name) {
     var data = playerData[name];
     if (!data) return;
     // Prevent double-open
     if (modal.classList.contains('active')) return;
-    // Lock scroll (iOS Safari fix)
-    window._scrollY = window.scrollY || document.documentElement.scrollTop;
+    // Lock scroll - use simpler approach for WeChat compatibility
     document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = '-' + window._scrollY + 'px';
-    document.body.style.left = '0';
-    document.body.style.right = '0';
-    document.body.style.width = '100%';
-    document.body.style.bottom = '0';
     document.documentElement.style.overflow = 'hidden';
+    document.addEventListener('touchmove', preventTouchMove, { passive: false });
 
     modal.classList.add('active');
 
@@ -3039,18 +3040,10 @@
   function closePhotoModal() {
     if (!modal.classList.contains('active')) return;
     modal.classList.remove('active');
-    // Restore scroll (iOS Safari fix)
-    var scrollY = window._scrollY || 0;
+    // Restore scroll
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.left = '';
-    document.body.style.right = '';
-    document.body.style.width = '';
-    document.body.style.bottom = '';
-    // Restore scroll position immediately
-    window.scrollTo(0, scrollY);
+    document.removeEventListener('touchmove', preventTouchMove);
   }
   modal.addEventListener('click', function(e) {
     if (!modalContent.contains(e.target)) closePhotoModal();
