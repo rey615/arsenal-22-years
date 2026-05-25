@@ -1868,6 +1868,9 @@
     .hero.fade-in .hero-sub,
     .hero.fade-in .h-num { animation: none; opacity: 1; transform: none; }
     .hero-watermark, .hero-stars::before, .hero-stars::after { animation: none; }
+    /* Disable all reveal animations to prevent scroll jump */
+    .reveal, .tl-item.reveal { opacity: 1; transform: none; filter: none; transition: none; }
+    .reveal.visible, .tl-item.reveal.visible { opacity: 1; transform: none; filter: none; }
   }
 
   /* ── REDUCED MOTION ── */
